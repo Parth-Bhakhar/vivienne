@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .update-product-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        .form-group input[type="submit"] {
+            width: auto;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 4px;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #4caf50;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="update-product-container">
+        <h1>Update Product</h1>
+        <form method='POST' enctype="multipart/form-data" action="/update_product/">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="product-id">Product ID:</label>
+                <input type="text" id="product-id" name="product_id" required>
+            </div>
+            <div class="form-group">
+                <label for="product-name">Product Name:</label>
+                <input type="text" id="product-name" name="product_name">
+            </div>
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" name="category">
+                    <option value="">--Select--</option>
+                    <option value="diamond">Diamond</option>
+                    <option value="gold">Gold</option>
+                    <option value="silver">Silver</option>
+                </select>
+            </div>
+            <div id="diamond-fields" style="display: none;">
+                <h3>Diamond Details</h3>
+                <div class="form-group">
+                    <label for="diamond-shape">Diamond Shape:</label>
+                    <input type="text" id="diamond-shape" name="diamond_shape">
+                </div>
+                <div class="form-group">
+                    <label for="diamond-type">Diamond Type:</label>
+                    <select id="diamond-type" name="diamond_type">
+                        <option value="">--Select--</option>
+                        <option value="natural">Natural</option>
+                        <option value="lab_grown">Lab Grown</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="diamond-color">Diamond Color:</label>
+                    <input type="text" id="diamond-color" name="diamond_color">
+                </div>
+                <div class="form-group">
+                    <label for="diamond-carat">Diamond Carat:</label>
+                    <input type="number" id="diamond-carat" name="diamond_carat" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="diamond-mrp">Diamond MRP:</label>
+                    <input type="number" id="diamond-mrp" name="diamond_mrp" step="0.01">
+                </div>
+            </div>
+            <div id="gold-fields" style="display: none;">
+                <h3>Gold Details</h3>
+                <div class="form-group">
+                    <label for="gold-category">Gold Category:</label>
+                    <input type="text" id="gold-category" name="gold_category">
+                </div>
+                <div class="form-group">
+                    <label for="weight">Weight:</label>
+                    <input type="number" id="weight" name="weight" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="carat">Carat:</label>
+                    <select id="carat" name="carat">
+                        <option value="">--Select--</option>
+                        <option value="22">22K</option>
+                        <option value="20">20K</option>
+                        <option value="18">18K</option>
+                        <option value="14">14K</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="labour-percentage">Labour Percentage:</label>
+                    <input type="number" id="labour-percentage" name="labour_percentage">
+                </div>
+                <div class="form-group">
+                    <label for="gold-mrp">Gold MRP:</label>
+                    <input type="number" id="gold-mrp" name="gold_mrp" step="0.01">
+                </div>
+            </div>
+            <div id="silver-fields" style="display: none;">
+                <h3>Silver Details</h3>
+                <div class="form-group">
+                    <label for="silver-category">Silver Category:</label>
+                    <input type="text" id="silver-category" name="silver_category">
+                </div>
+                <div class="form-group">
+                    <label for="silver-weight">Weight:</label>
+                    <input type="number" id="silver-weight" name="weight" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="silver-mrp">Silver MRP:</label>
+                    <input type="number" id="silver-mrp" name="silver_mrp" step="0.01">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="product-picture1">Product Image 1:</label>
+                <input type="file" id="product-picture1" name="product_picture1">
+            </div>
+            <div class="form-group">
+                <label for="product-picture2">Product Image 2:</label>
+                <input type="file" id="product-picture2" name="product_picture2">
+            </div>
+            <div class="form-group">
+                <label for="product-picture3">Product Image 3:</label>
+                <input type="file" id="product-picture3" name="product_picture3">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Update Product">
+            </div>
+        </form>
+        <a href="/admin">Back to Admin Dashboard</a>
+    </div>
+    <script>
+        const categoryField = document.getElementById('category');
+        const diamondFields = document.getElementById('diamond-fields');
+        const goldFields = document.getElementById('gold-fields');
+        const silverFields = document.getElementById('silver-fields');
+
+        categoryField.addEventListener('change', function () {
+            diamondFields.style.display = 'none';
+            goldFields.style.display = 'none';
+            silverFields.style.display = 'none';
+
+            if (this.value === 'diamond') diamondFields.style.display = 'block';
+            if (this.value === 'gold') goldFields.style.display = 'block';
+            if (this.value === 'silver') silverFields.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
