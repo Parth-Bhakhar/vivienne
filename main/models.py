@@ -11,8 +11,16 @@ class Product(models.Model):
         ('silver', 'Silver'),
     ]
 
+
+    STATUS_CHOICES = [
+        (1, 'Enabled'),
+        (0, 'Disabled'),
+    ]
+
     product_name = models.CharField(max_length=255, unique=True)
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=1)
+
 
     # Common fields for images
     product_picture1 = models.ImageField(upload_to='media/', null=True, blank=True)
@@ -42,7 +50,7 @@ class Gold(models.Model):
     gold_id = models.CharField(max_length=255, unique=True)
     gold_category = models.CharField(max_length=255)
     weight = models.FloatField()
-    carat = models.PositiveIntegerField(choices=[(22, '22K'), (20, '20K'), (18, '18K'), (14, '14K')])
+    carat = models.FloatField(choices=[(91.60, '22K'), (84.00, '20K'), (76.00, '18K'), (58.33, '14K')])
     labour_percentage = models.PositiveIntegerField()
     description = models.TextField()
     diamond_weight_in_gold = models.FloatField(null=True, blank=True)

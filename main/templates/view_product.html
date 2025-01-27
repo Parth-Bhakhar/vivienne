@@ -38,12 +38,12 @@
             {% csrf_token %}
             <label for="category" class="mr-2">Filter by Category:</label>
             <select name="category" id="category" class="form-control mr-3">
-                <option value="">All</option>
+                <option value="all" {% if selected_category == 'all' or selected_category == '' %}selected{% endif %}>All</option>
                 <option value="diamond" {% if selected_category == 'diamond' %}selected{% endif %}>Diamond</option>
                 <option value="gold" {% if selected_category == 'gold' %}selected{% endif %}>Gold</option>
                 <option value="silver" {% if selected_category == 'silver' %}selected{% endif %}>Silver</option>
             </select>
-            <input type="text" name="search" class="form-control mr-3" placeholder="Search by Product ID or Name" value="{{ search_query }}">
+            <input type="text" name="search" class="form-control mr-3" placeholder="Search" value="{{ search_query }}">
             <button type="submit" class="btn btn-primary">Apply</button>
         </form>
 
@@ -86,11 +86,14 @@
                         </span>
                     </td>
                     <td>
-                        <button class="status-button {% if product.status %}status-disabled{% else %}status-enabled{% endif %}">
-                            {% if product.status %}Disable{% else %}Enable{% endif %}
-                        </button>
+                        <form method="POST" action="{% url 'toggle_product_status' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="status-button {% if product.status %}status-disabled{% else %}status-enabled{% endif %}">
+                                {% if product.status %}Disable{% else %}Enable{% endif %}
+                            </button>
+                        </form>
                     </td>
-                </tr>
+                    </tr>
                 {% empty %}
                 <tr>
                     <td colspan="6" class="text-center">No products found.</td>

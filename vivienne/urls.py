@@ -26,4 +26,5 @@ urlpatterns = [
     path('update_product/', update_product, name='update_product'),
     path('view_product/', view_product, name='view_product'),
     path('update_rates/', update_rates, name='update_rates'),
+    path('toggle-status/<int:product_id>/', toggle_product_status, name='toggle_product_status'),
 ]

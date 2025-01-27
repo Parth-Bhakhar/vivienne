@@ -111,23 +111,16 @@ def view_product(request):
     products = Product.objects.all()
 
     # Get the selected category and search query from the GET request
-    category_filter = request.POST.get('category')
-    search_query = request.POST.get('search')
+    category_filter = request.POST.get('category', '').strip()
+    search_query = request.POST.get('search', '').strip()
 
-    # If a category is selected and search query is None or empty, filter only by category
-    if category_filter and (search_query or search_query == ''):
+    # Apply category filter only if a specific category is selected (not "All" or empty)
+    if category_filter and category_filter.lower() != 'all':
         products = products.filter(category=category_filter)
-    
-    # If a search query is provided, filter by both category and search query
-    elif search_query and search_query != '':
-        products = products.filter(
-            Q(id__icontains=search_query) |
-            Q(product_name__icontains=search_query)
-        )
 
-    # If both category and search query are provided, filter by both
-    if category_filter and search_query and search_query != 'None':
-        products = products.filter(category=category_filter).filter(
+    # Apply search filter if a search query is provided
+    if search_query:
+        products = products.filter(
             Q(id__icontains=search_query) |
             Q(product_name__icontains=search_query)
         )
@@ -150,17 +143,48 @@ def update_rates(request):
         if gold_rate > 0:
             gold_items = Gold.objects.all()
             for gold in gold_items:
-                gold.gold_mrp = gold.weight * gold_rate + (gold.weight * gold_rate * gold.labour_percentage / 100)
+                gold.gold_mrp = ((gold.weight - gold.diamond_weight_in_gold) * gold.carat * gold_rate) / 100 + ((gold_rate * gold.labour_percentage) / 100)
                 gold.save()
 
         # Update Silver Table MRPs
-        if silver_rate > 0:
-            silver_items = Silver.objects.all()
-            for silver in silver_items:
-                silver.silver_mrp = silver.weight * silver_rate
-                silver.save()
+        # if silver_rate > 0:
+        #     silver_items = Silver.objects.all()
+        #     for silver in silver_items:
+        #         silver.silver_mrp = silver.weight * silver_rate
+        #         silver.save()
+
 
         messages.success(request, "Gold and Silver rates updated successfully!")
         return redirect("/admin")  # Redirect back to the admin dashboard
 
     return render(request, "admin.html")
+
+
+def toggle_product_status(request, product_id):
+    if request.method == 'POST':
+        product = get_object_or_404(Product, id=product_id)
+        product.status = 0 if product.status == 1 else 1
+        product.save()
+        status_message = "enabled" if product.status == 1 else "disabled"
+        messages.success(request, f"Product '{product.product_name}' has been {status_message}.")
+
+    # Re-fetch products and filters to render the updated page
+    category_filter = request.POST.get('category', '').strip()
+    search_query = request.POST.get('search', '').strip()
+
+    products = Product.objects.all()
+    if category_filter and category_filter.lower() != 'all':
+        products = products.filter(category=category_filter)
+
+    if search_query:
+        products = products.filter(
+            Q(id__icontains=search_query) |
+            Q(product_name__icontains=search_query)
+        )
+
+    context = {
+        'products': products,
+        'selected_category': category_filter,
+        'search_query': search_query,
+    }
+    return render(request, 'view_product.html', context)
