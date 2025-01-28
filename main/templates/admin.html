@@ -329,28 +329,53 @@
 
     <!-- JavaScript for Date and Time -->
     <script>
-        function updateDateTime() {
-            var now = new Date();
+    function updateDateTime() {
+        var now = new Date();
 
-            // Date in dd/mm/yyyy format
-            var day = now.getDate().toString().padStart(2, '0');
-            var month = (now.getMonth() + 1).toString().padStart(2, '0');
-            var year = now.getFullYear();
-            var formattedDate = day + '/' + month + '/' + year;
+        // Date in dd/mm/yyyy format
+        var day = now.getDate().toString().padStart(2, '0');
+        var month = (now.getMonth() + 1).toString().padStart(2, '0');
+        var year = now.getFullYear();
+        var formattedDate = day + '/' + month + '/' + year;
 
-            // Time in hr:min format
-            var hours = now.getHours().toString().padStart(2, '0');
-            var minutes = now.getMinutes().toString().padStart(2, '0');
-            var formattedTime = hours + ':' + minutes;
+        // Time in hr:min format
+        var hours = now.getHours().toString().padStart(2, '0');
+        var minutes = now.getMinutes().toString().padStart(2, '0');
+        var formattedTime = hours + ':' + minutes;
 
-            // Display date and time
-            document.getElementById('date').textContent = 'Date: ' + formattedDate;
-            document.getElementById('time').textContent = 'Time: ' + formattedTime;
-        }
+        // Display date and time
+        document.getElementById('date').textContent = 'Date: ' + formattedDate;
+        document.getElementById('time').textContent = 'Time: ' + formattedTime;
+    }
 
-        // Update every minute
-        setInterval(updateDateTime, 60000);
-        updateDateTime(); 
+    // Update every minute
+    setInterval(updateDateTime, 60000);
+    updateDateTime(); 
+
+    // Function to show success message
+    function showFlashMessage(message) {
+        var flashMessageElement = document.getElementById('flash-message');
+        var messageContent = document.getElementById('message-content');
+        
+        // Set the content of the flash message
+        messageContent.textContent = message;
+        
+        // Show the flash message
+        flashMessageElement.style.display = 'block';
+        
+        // Hide the flash message after 2 seconds
+        setTimeout(function() {
+            flashMessageElement.style.display = 'none';
+        }, 2000);
+    }
+
+    // Display the flash message if there are any messages
+    {% if messages %}
+        {% for message in messages %}
+            // Call the function to display the flash message
+            showFlashMessage('{{ message }}');
+        {% endfor %}
+    {% endif %}
     </script>
 
 </body>

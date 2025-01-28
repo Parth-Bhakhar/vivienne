@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Product, Diamond, Gold, Silver
+from .models import Product, Diamond, Gold, Silver, MetalRate
 from django.db import connection
 from django.http import JsonResponse
 from django.http import HttpResponse
+from django.db import IntegrityError
 from django.db import transaction
 from django.db.models import Q
+from django.utils.timezone import now, localtime
 
 
 
@@ -30,7 +32,6 @@ def add_product(request):
             Diamond.objects.create(
                 product=product,
                 diamond_id=request.POST.get('Diamond-Id'),
-                product_name = request.POST.get('product_name'),
                 diamond_shape=request.POST.get('diamond_shape'),
                 diamond_type=request.POST.get('diamond_type'),
                 diamond_color=request.POST.get('diamond_color'),
@@ -102,9 +103,6 @@ def delete_product(request):
     return render(request, "delete_product.html")
  
 
-def update_product(request):
-    return render(request, 'update_product.html')
-
 
 def view_product(request):
     # Fetch all products initially
@@ -136,27 +134,45 @@ def view_product(request):
 
 def update_rates(request):
     if request.method == "POST":
+        # Get the rates from the form
         gold_rate = float(request.POST.get("gold_rate", 0))
         silver_rate = float(request.POST.get("silver_rate", 0))
+
+        current_time = localtime().time()
+
+        # Save the rates to MetalRate table with the current date
+        if gold_rate > 0 or silver_rate > 0:
+            MetalRate.objects.create(
+                date=localtime().date(),
+                time=current_time,
+                gold_rate=gold_rate if gold_rate > 0 else None,
+                silver_rate=silver_rate if silver_rate > 0 else None,
+            )
 
         # Update Gold Table MRPs
         if gold_rate > 0:
             gold_items = Gold.objects.all()
             for gold in gold_items:
-                gold.gold_mrp = ((gold.weight - gold.diamond_weight_in_gold) * gold.carat * gold_rate) / 100 + ((gold_rate * gold.labour_percentage) / 100)
+                gold.gold_mrp = (
+                    ((gold.weight - gold.diamond_weight_in_gold) * gold.carat * gold_rate) / 100
+                    + ((gold_rate * gold.labour_percentage) / 100)
+                )
                 gold.save()
 
-        # Update Silver Table MRPs
-        # if silver_rate > 0:
-        #     silver_items = Silver.objects.all()
-        #     for silver in silver_items:
-        #         silver.silver_mrp = silver.weight * silver_rate
-        #         silver.save()
+        # Update Silver Table MRPs (Uncomment if needed)
+        if silver_rate > 0:
+            silver_items = Silver.objects.all()
+            for silver in silver_items:
+                silver.silver_mrp = silver.weight * silver_rate
+                silver.save()
 
-
+        # Add a success message
         messages.success(request, "Gold and Silver rates updated successfully!")
-        return redirect("/admin")  # Redirect back to the admin dashboard
 
+        # Redirect to the admin dashboard or any relevant page
+        return redirect("/admin")
+
+    # If GET request, render the form page
     return render(request, "admin.html")
 
 
@@ -188,3 +204,90 @@ def toggle_product_status(request, product_id):
         'search_query': search_query,
     }
     return render(request, 'view_product.html', context)
+
+def update_product(request):
+    product = None
+    diamond = None
+    gold = None
+    silver = None
+
+    # Check if the request method is POST
+    if request.method == 'POST':
+        # Handling the first form to fetch the product based on product_id
+        product_id = request.POST.get('product_id')
+        
+        if product_id:
+            # Get the product instance
+            product = get_object_or_404(Product, id=product_id)
+            
+            # Handle fetching the product details (we do not update yet)
+            # These details will be available in the form after fetching the product
+            if product.category == 'diamond':
+                diamond = get_object_or_404(Diamond, product=product)
+            elif product.category == 'gold':
+                gold = get_object_or_404(Gold, product=product)
+            elif product.category == 'silver':
+                silver = get_object_or_404(Silver, product=product)
+
+            return render(request, 'update_product.html', {
+                'product': product,
+                'diamond': diamond,
+                'gold': gold,
+                'silver': silver,
+                'fetch_product': True  # This is to distinguish between the "fetch" and "update" form
+            })
+
+        # Handling the second form to update product details
+        if request.POST.get('update_product'):
+            product_id = request.POST.get('product_id')
+            if product_id:
+                # Get the product instance again
+                product = get_object_or_404(Product, id=product_id)
+                product.product_name = request.POST.get('product_name', product.product_name)
+                product.category = request.POST.get('category', product.category)
+                product.save()
+
+                # Depending on the category, update the respective product details
+                if product.category == 'diamond':
+                    diamond = get_object_or_404(Diamond, product=product)
+                    diamond_id=request.POST.get('Diamond-Id'),
+                    diamond_shape=request.POST.get('diamond_shape'),
+                    diamond_type=request.POST.get('diamond_type'),
+                    diamond_color=request.POST.get('diamond_color'),
+                    diamond_carat=request.POST.get('diamond_carat'),
+                    diamond_mrp=request.POST.get('diamond_mrp',diamond.diamond_mrp),
+                    diamond.save()
+
+                elif product.category == 'gold':
+                    gold = get_object_or_404(Gold, product=product)
+                    gold.gold_id = request.POST.get('Gold_p_id', gold.gold_id)
+                    gold.gold_category = request.POST.get('gold_category', gold.gold_category)
+                    gold.weight = request.POST.get('gold_weight', gold.weight)
+                    gold.carat = request.POST.get('gold_carat', gold.carat)
+                    gold.labour_percentage = request.POST.get('gold_labour', gold.labour_percentage)
+                    gold.description = request.POST.get('gold_description', gold.description)
+                    gold.diamond_weight_in_gold = request.POST.get('diamond_weight', gold.diamond_weight_in_gold)
+                    gold.gold_mrp = request.POST.get('gold_mrp', gold.gold_mrp)
+                    gold.bangle_size = request.POST.get('bangles_size', gold.bangle_size)
+                    gold.ring_bracelet_size = request.POST.get('ring_bracelet_size', gold.ring_bracelet_size)
+                    gold.save()
+
+                elif product.category == 'silver':
+                    silver = get_object_or_404(Silver, product=product)
+                    silver.silver_id = request.POST.get('Silver_p_id', silver.silver_id)
+                    silver.silver_category = request.POST.get('silver_category', silver.silver_category)
+                    silver.weight = request.POST.get('silver_weight', silver.weight)
+                    silver.silver_mrp = request.POST.get('silver_mrp', silver.silver_mrp)
+                    silver.bangle_size = request.POST.get('silver_bangles_size', silver.bangle_size)
+                    silver.ring_bracelet_size = request.POST.get('silver_ring_bracelet_size', silver.ring_bracelet_size)
+                    silver.save()
+
+                return redirect('update_product', product_id=product.id)
+
+    return render(request, 'update_product.html', {
+        'product': product,
+        'diamond': diamond,
+        'gold': gold,
+        'silver': silver,
+        'fetch_product': False,  # This indicates that the product hasn't been fetched yet
+    })

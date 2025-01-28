@@ -2,6 +2,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.db import models
 import os
+from django.utils.timezone import now
 
 
 class Product(models.Model):
@@ -34,7 +35,6 @@ class Product(models.Model):
 class Diamond(models.Model):
     product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='diamond_details')
     diamond_id = models.CharField(max_length=255, unique=True)
-    product_name = models.CharField(max_length=255, unique=True)
     diamond_shape = models.CharField(max_length=50)
     diamond_type = models.CharField(max_length=50, choices=[('natural', 'Natural'), ('lab_grown', 'Lab Grown')])
     diamond_color = models.CharField(max_length=50)
@@ -83,3 +83,13 @@ def delete_produc(sender, instance, **kwargs):
             if os.path.isfile(file_field.path):
                 os.remove(file_field.path)
                 print(f"Deleted: {file_field.path}")
+
+
+class MetalRate(models.Model):
+    date = models.DateField(default=now) 
+    time = models.TimeField()
+    gold_rate = models.DecimalField(max_digits=10, decimal_places=2)
+    silver_rate = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Rates on {self.date}: Gold - {self.gold_rate}, Silver - {self.silver_rate}"

@@ -4,191 +4,384 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Product</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts (Quicksand) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom CSS for additional styling -->
     <style>
+        /* Global styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Quicksand', sans-serif;
+            background-color: #F5F5F5;
             margin: 0;
             padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
-        .update-product-container {
+
+        .container {
             max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #fff;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            margin-top: 50px;
         }
+
         h1 {
             text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
             color: #333;
         }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
-        .form-group label {
-            display: block;
-            font-weight: bold;
-        }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-top: 5px;
-        }
-        .form-group input[type="submit"] {
-            width: auto;
-            background-color: #4caf50;
-            color: white;
+
+        .btn-custom {
+            background-color: #007bff;
+            color: #ffffff;
             border: none;
-            cursor: pointer;
             padding: 10px 20px;
-            border-radius: 4px;
+            width: 100%;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        .form-group input[type="submit"]:hover {
-            background-color: #45a049;
+
+        .btn-custom:hover {
+            background-color: #0056b3;
         }
+
+        .form-control {
+            border-radius: 5px;
+            font-size: 1rem;
+            padding: 12px;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+        }
+
+        .form-control-file {
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        /* Section headings */
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            color: #333;
+        }
+
+        /* Responsive styling for smaller devices */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .btn-custom {
+                font-size: 1rem;
+            }
+        }
+
+        /* Link Styles */
         a {
             display: inline-block;
             margin-top: 20px;
-            color: #4caf50;
-            text-decoration: none;
             font-size: 16px;
+            color: #007bff;
+            text-decoration: none;
         }
+
         a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="update-product-container">
-        <h1>Update Product</h1>
-        <form method='POST' enctype="multipart/form-data" action="/update_product/">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="product-id">Product ID:</label>
-                <input type="text" id="product-id" name="product_id" required>
-            </div>
-            <div class="form-group">
-                <label for="product-name">Product Name:</label>
-                <input type="text" id="product-name" name="product_name">
-            </div>
-            <div class="form-group">
-                <label for="category">Category:</label>
-                <select id="category" name="category">
-                    <option value="">--Select--</option>
-                    <option value="diamond">Diamond</option>
-                    <option value="gold">Gold</option>
-                    <option value="silver">Silver</option>
-                </select>
-            </div>
-            <div id="diamond-fields" style="display: none;">
-                <h3>Diamond Details</h3>
-                <div class="form-group">
-                    <label for="diamond-shape">Diamond Shape:</label>
-                    <input type="text" id="diamond-shape" name="diamond_shape">
-                </div>
-                <div class="form-group">
-                    <label for="diamond-type">Diamond Type:</label>
-                    <select id="diamond-type" name="diamond_type">
-                        <option value="">--Select--</option>
-                        <option value="natural">Natural</option>
-                        <option value="lab_grown">Lab Grown</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="diamond-color">Diamond Color:</label>
-                    <input type="text" id="diamond-color" name="diamond_color">
-                </div>
-                <div class="form-group">
-                    <label for="diamond-carat">Diamond Carat:</label>
-                    <input type="number" id="diamond-carat" name="diamond_carat" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label for="diamond-mrp">Diamond MRP:</label>
-                    <input type="number" id="diamond-mrp" name="diamond_mrp" step="0.01">
-                </div>
-            </div>
-            <div id="gold-fields" style="display: none;">
-                <h3>Gold Details</h3>
-                <div class="form-group">
-                    <label for="gold-category">Gold Category:</label>
-                    <input type="text" id="gold-category" name="gold_category">
-                </div>
-                <div class="form-group">
-                    <label for="weight">Weight:</label>
-                    <input type="number" id="weight" name="weight" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label for="carat">Carat:</label>
-                    <select id="carat" name="carat">
-                        <option value="">--Select--</option>
-                        <option value="22">22K</option>
-                        <option value="20">20K</option>
-                        <option value="18">18K</option>
-                        <option value="14">14K</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="labour-percentage">Labour Percentage:</label>
-                    <input type="number" id="labour-percentage" name="labour_percentage">
-                </div>
-                <div class="form-group">
-                    <label for="gold-mrp">Gold MRP:</label>
-                    <input type="number" id="gold-mrp" name="gold_mrp" step="0.01">
-                </div>
-            </div>
-            <div id="silver-fields" style="display: none;">
-                <h3>Silver Details</h3>
-                <div class="form-group">
-                    <label for="silver-category">Silver Category:</label>
-                    <input type="text" id="silver-category" name="silver_category">
-                </div>
-                <div class="form-group">
-                    <label for="silver-weight">Weight:</label>
-                    <input type="number" id="silver-weight" name="weight" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label for="silver-mrp">Silver MRP:</label>
-                    <input type="number" id="silver-mrp" name="silver_mrp" step="0.01">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="product-picture1">Product Image 1:</label>
-                <input type="file" id="product-picture1" name="product_picture1">
-            </div>
-            <div class="form-group">
-                <label for="product-picture2">Product Image 2:</label>
-                <input type="file" id="product-picture2" name="product_picture2">
-            </div>
-            <div class="form-group">
-                <label for="product-picture3">Product Image 3:</label>
-                <input type="file" id="product-picture3" name="product_picture3">
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Update Product">
-            </div>
-        </form>
-        <a href="/admin">Back to Admin Dashboard</a>
+
+<div class="container">
+    <h1>Update Product</h1>
+    <form action="/update_product/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Product ID Field -->
+        <div class="form-group">
+            <label for="product_id">Product ID:</label>
+            <input type="text" class="form-control" id="product_id" name="product_id" value="{{ product.id }}" required>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-custom">Fetch Product</button>
+        </div>
+    </form>    
+
+    {% if fetch_product %}
+    <form method="POST" action="/update_product/", enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="product_name">Product Name:</label>
+            <input type="text" class="form-control" id="product_name" name="product_name" value="{{ product.product_name }}">
+        </div>
+
+        <div class="form-group">
+            <label for="product_category">Category:</label>
+            <select class="form-control" id="product_category" name="category" onchange="showCategoryDetails()">
+                <option value="diamond" {% if product.category == 'diamond' %}selected{% endif %}>Diamond</option>
+                <option value="gold" {% if product.category == 'gold' %}selected{% endif %}>Gold</option>
+                <option value="silver" {% if product.category == 'silver' %}selected{% endif %}>Silver</option>
+            </select>
+        </div>
+
+        <!-- Diamond Details -->
+<div id="diamond_details" style="display: {% if product.category == 'diamond' %}block{% else %}none{% endif %};">
+    <h3>Diamond Details</h3>
+    <div class="form-group">
+        <label for="Diamond-Id">Diamond Product Id:</label>
+        <input type="text" class="form-control" id="Diamond-Id" name="Diamond-Id" value="{{ diamond.diamond_id }}">
     </div>
-    <script>
-        const categoryField = document.getElementById('category');
-        const diamondFields = document.getElementById('diamond-fields');
-        const goldFields = document.getElementById('gold-fields');
-        const silverFields = document.getElementById('silver-fields');
+    <div class="form-group">
+        <label for="diamond_shape">Diamond Shape:</label>
+        <select class="form-control" id="diamond_shape" name="diamond_shape">
+            <option value="round" {% if diamond.diamond_shape == 'round' %}selected{% endif %}>Round</option>
+            <option value="princess" {% if diamond.diamond_shape == 'princess' %}selected{% endif %}>Princess</option>
+            <option value="marquis" {% if diamond.diamond_shape == 'marquis' %}selected{% endif %}>Marquis</option>
+            <option value="heart" {% if diamond.diamond_shape == 'heart' %}selected{% endif %}>Heart</option>
+            <option value="pear" {% if diamond.diamond_shape == 'pear' %}selected{% endif %}>Pear</option>
+            <option value="oval" {% if diamond.diamond_shape == 'oval' %}selected{% endif %}>Oval</option>
+            <option value="emerald" {% if diamond.diamond_shape == 'emerald' %}selected{% endif %}>Emerald</option>
+            <option value="cushion" {% if diamond.diamond_shape == 'cushion' %}selected{% endif %}>Cushion</option>
+            <option value="radiant" {% if diamond.diamond_shape == 'radiant' %}selected{% endif %}>Radiant</option>
+            <option value="asscher" {% if diamond.diamond_shape == 'asscher' %}selected{% endif %}>Asscher</option>
+        </select>
+    </div>
 
-        categoryField.addEventListener('change', function () {
-            diamondFields.style.display = 'none';
-            goldFields.style.display = 'none';
-            silverFields.style.display = 'none';
+    <div class="form-group">
+        <label for="diamond_type">Diamond Type:</label>
+        <select class="form-control" id="diamond_type" name="diamond_type">
+            <option value="natural" {% if diamond.diamond_type == 'natural' %}selected{% endif %}>Natural</option>
+            <option value="lab_grown" {% if diamond.diamond_type == 'lab_grown' %}selected{% endif %}>Lab Grown</option>
+        </select>
+    </div>
 
-            if (this.value === 'diamond') diamondFields.style.display = 'block';
-            if (this.value === 'gold') goldFields.style.display = 'block';
-            if (this.value === 'silver') silverFields.style.display = 'block';
-        });
-    </script>
+    <div class="form-group">
+        <label for="diamond_color">Diamond Color:</label>
+        <input type="text" class="form-control" id="diamond_color" name="diamond_color" value="{{ diamond.diamond_color }}">
+    </div>
+
+    <div class="form-group">
+        <label for="diamond_carat">Diamond Carat:</label>
+        <input type="text" class="form-control" id="diamond_carat" name="diamond_carat" value="{{ diamond.diamond_carat }}">
+    </div>
+
+    <div class="form-group">
+        <label for="diamond_mrp">MRP:</label>
+        <input type="number" class="form-control" id="diamond_mrp" name="diamond_mrp" value="{{ diamond.diamond_mrp }}">
+    </div>
+
+    <div class="form-group">
+        <label for="product_picture">Product Picture 1:</label>
+        <input type="file" class="form-control-file" id="product_picture" name="product_picture1" accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="product_picture">Product Picture 2:</label>
+        <input type="file" class="form-control-file" id="product_picture" name="product_picture2" accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="product_picture">Product Picture 3:</label>
+        <input type="file" class="form-control-file" id="product_picture" name="product_picture3" accept="image/*">
+    </div>
+</div>
+
+       <!-- Gold Details -->
+<div id="gold_details" style="display: {% if product.category == 'gold' %}block{% else %}none{% endif %};">
+    <h3>Gold Details</h3>
+    
+    <div class="form-group">
+        <label for="Gold_p_id">Gold Product Id:</label>
+        <input type="text" class="form-control" id="Gold_p_id" name="Gold_p_id" value="{{ gold.gold_id }}">
+    </div>
+
+    <div class="form-group">
+        <label for="gold_category">Gold Category:</label>
+        <select class="form-control" id="gold_category" name="gold_category" onchange="showSizeOptions()">
+            <option value="" selected>Select Gold Category</option>
+            <option value="Bangles"{% if gold.gold_category == 'Bangles' %}selected{% endif %}>Bangles</option>
+            <option value="Bracelets"{% if gold.gold_category == 'Bracelets' %}selected{% endif %}>Bracelets</option>
+            <option value="Earrings"{% if gold.gold_category == 'Earrings' %}selected{% endif %}>Earrings</option>
+            <option value="Gold Chains"{% if gold.gold_category == 'Gold Chains' %}selected{% endif %}>Gold Chains</option>
+            <option value="Pendants"{% if gold.gold_category == 'Pendants' %}selected{% endif %}>Pendants</option>
+            <option value="Rings"{% if gold.gold_category == 'Rings' %}selected{% endif %}>Rings</option>
+            <option value="Necklaces"{% if gold.gold_category == 'Necklaces' %}selected{% endif %}>Necklaces</option>
+            <option value="Nose Pins"{% if gold.gold_category == 'Nose Pins' %}selected{% endif %}>Nose Pins</option>
+            <option value="Kadas"{% if gold.gold_category == 'Kadas' %}selected{% endif %}>Kadas</option>
+            <option value="Mangalsutras"{% if gold.gold_category == 'Mangalsutras' %}selected{% endif %}>Mangalsutras</option>
+            <option value="Jhumkas"{% if gold.gold_category == 'Jhumkas' %}selected{% endif %}>Jhumkas</option>
+            <option value="Maang Tikka"{% if gold.gold_category == 'Maang Tikka' %}selected{% endif %}>Maang Tikka</option>
+            <option value="Necklace Set"{% if gold.gold_category == 'Necklace Set' %}selected{% endif %}>Necklace Set</option>
+            <option value="Pendants & Earrings Sets"{% if gold.gold_category == 'Pendants & Earrings Sets' %}selected{% endif %}>Pendants & Earrings Sets</option>
+        </select>
+    </div>
+    
+    <!-- Size Options for Bangles -->
+    <div id="bangles_size" class="form-group">
+        <label for="bangles_size_select">Bangle Size:</label>
+        <select class="form-control" id="bangles_size_select" name="bangles_size">
+            <option value="" selected>Select Size</option>
+            <option value="2/2""{% if gold.bangle_size == '2/2' %}selected{% endif %}>2/2</option>
+            <option value="2/4""{% if gold.bangle_size == '2/4' %}selected{% endif %}>2/4</option>
+            <option value="2/6""{% if gold.bangle_size == '2/6' %}selected{% endif %}>2/6</option>
+            <option value="2/8""{% if gold.bangle_size == '2/8' %}selected{% endif %}>2/8</option>
+        </select>
+    </div>
+    
+    <!-- Size Input for Rings and Bracelets -->
+    <div id="ring_bracelet_size" class="form-group">
+        <label for="ring_bracelet_size_input">Size:</label>
+        <input type="text" class="form-control" id="ring_bracelet_size_input" name="ring_bracelet_size" placeholder="Enter Size (e.g., 6, 7)"value="{{ gold.ring_bracelet_size }}">
+    </div>
+
+    <div class="form-group">
+        <label for="gold_weight">Gold Weight (grams):</label>
+        <input type="number" class="form-control" id="gold_weight" name="gold_weight" value="{{ gold.weight }}">
+    </div>
+
+    <div class="form-group">
+        <label for="gold_carat">Gold Carat:</label>
+        <select class="form-control" id="gold_carat" name="gold_carat">
+            <option value="91.60""{% if gold.carat == '22' %}selected{% endif %}>22</option>
+            <option value="84.00""{% if gold.carat == '20' %}selected{% endif %}>20</option>
+            <option value="76.00""{% if gold.carat == '18' %}selected{% endif %}>18</option>
+            <option value="58.33""{% if gold.carat == '14' %}selected{% endif %}>14</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="gold_labour">Gold Labour:</label>
+        <select class="form-control" id="gold_labour" name="gold_labour">
+            <option value="8""{% if gold.carat == '8%' %}selected{% endif %}>8%</option>
+            <option value="10""{% if gold.carat == '10%' %}selected{% endif %}>10%</option>
+            <option value="12""{% if gold.carat == '12%' %}selected{% endif %}>12%</option>
+            <option value="15""{% if gold.carat == '15%' %}selected{% endif %}>15%</option>
+            <option value="18""{% if gold.carat == '18%' %}selected{% endif %}>18%</option>
+            <option value="20""{% if gold.carat == '20%' %}selected{% endif %}>20%</option>
+            <option value="25""{% if gold.carat == '25%' %}selected{% endif %}>25%</option>
+            <option value="30""{% if gold.carat == '30%' %}selected{% endif %}>30%</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="gold_description">Description:</label>
+        <textarea class="form-control" id="gold_description" name="gold_description">{{ gold.description }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="diamond_weight">Diamond Weight (grams) in Gold:</label>
+        <input type="number" class="form-control" id="diamond_weight" name="diamond_weight" value="{{ gold.diamond_weight_in_gold }}">
+    </div>
+
+    <div class="form-group">
+        <label for="gold_mrp">MRP:</label>
+        <input type="number" class="form-control" id="gold_mrp" name="gold_mrp" value="{{ gold.gold_mrp }}">
+    </div>
+
+    <div class="form-group">
+        <label for="product_picture">Product Picture 1:</label>
+        <input type="file" class="form-control-file" id="product_picture" name="product_picture1" accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="product_picture">Product Picture 2:</label>
+        <input type="file" class="form-control-file" id="product_picture" name="product_picture2" accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="product_picture">Product Picture 3:</label>
+        <input type="file" class="form-control-file" id="product_picture" name="product_picture3" accept="image/*">
+    </div>
+</div>
+
+        <!-- Silver Details -->
+<div id="silver_details" style="display: {% if product.category == 'silver' %}block{% else %}none{% endif %};">
+    <h3>Silver Details</h3>
+
+    <div class="form-group">
+        <label for="Silver_p_id">Silver Product Id:</label>
+        <input type="text" class="form-control" id="Silver_p_id" name="Silver_p_id" value="{{ silver.silver_id }}">
+    </div>
+
+    <div class="form-group">
+        <label for="silver_category">Silver Category:</label>
+        <select class="form-control" id="silver_category" name="silver_category" onchange="showSilverSizeOptions()">
+            <option value="" selected>Select Silver Category</option>
+            <option value="Bangles"{% if silver.silver_category == 'Bangles' %}selected{% endif %}>Bangles</option>
+            <option value="Bracelets"{% if silver.silver_category == 'Bracelets' %}selected{% endif %}>Bracelets</option>
+            <option value="Earrings"{% if silver.silver_category == 'Earrings' %}selected{% endif %}>Earrings</option>
+            <option value="Chains"{% if silver.silver_category == 'Chains' %}selected{% endif %}>Chains</option>
+            <option value="Pendants"{% if silver.silver_category == 'Pendants' %}selected{% endif %}>Pendants</option>
+            <option value="Rings"{% if silver.silver_category == 'Rings' %}selected{% endif %}>Rings</option>
+            <option value="Necklaces"{% if silver.silver_category == 'Necklaces' %}selected{% endif %}>Necklaces</option>
+            <option value="Anklets"{% if silver.silver_category == 'Anklets' %}selected{% endif %}>Anklets</option>
+        </select>
+    </div>
+
+    <!-- Size Options for Bangles -->
+    <div id="silver_bangles_size" class="form-group">
+        <label for="silver_bangles_size_select">Bangle Size:</label>
+        <select class="form-control" id="silver_bangles_size_select" name="silver_bangles_size">
+            <option value="" selected>Select Size</option>
+            <option value="2/2"{% if silver.bangle_size == '2/2' %}selected{% endif %}>2/2</option>
+            <option value="2/4"{% if silver.bangle_size == '2/4' %}selected{% endif %}>2/4</option>
+            <option value="2/6"{% if silver.bangle_size == '2/6' %}selected{% endif %}>2/6</option>
+            <option value="2/8"{% if silver.bangle_size == '2/8' %}selected{% endif %}>2/8</option>
+        </select>
+    </div>
+
+    <!-- Size Input for Rings and Bracelets -->
+    <div id="silver_ring_bracelet_size" class="form-group">
+        <label for="silver_ring_bracelet_size_input">Size:</label>
+        <input type="text" class="form-control" id="silver_ring_bracelet_size_input" name="silver_ring_bracelet_size" placeholder="Enter Size (e.g., 6, 7)"value="{{ silver.ring_bracelet_size }}">
+    </div>
+
+    <div class="form-group">
+        <label for="silver_weight">Silver Weight (grams):</label>
+        <input type="number" class="form-control" id="silver_weight" name="silver_weight" value="{{ silver.weight }}">
+    </div>
+
+    <div class="form-group">
+        <label for="silver_mrp">MRP:</label>
+        <input type="number" class="form-control" id="silver_mrp" name="silver_mrp" value="{{ silver.silver_mrp }}">
+    </div>
+
+    <div class="form-group">
+        <label for="product_picture">Product Picture 1:</label>
+        <input type="file" class="form-control-file" id="product_picture" name="product_picture1" accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="product_picture">Product Picture 2:</label>
+        <input type="file" class="form-control-file" id="product_picture" name="product_picture2" accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="product_picture">Product Picture 3:</label>
+        <input type="file" class="form-control-file" id="product_picture" name="product_picture3" accept="image/*">
+    </div>
+</div>
+    <button type="submit" class="btn-custom">Update Product</button>
+</form>
+{% endif %}
+<a href="/admin">Back to Admin Dashboard</a>
+</div>
 </body>
 </html>
