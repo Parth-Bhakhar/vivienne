@@ -4,7 +4,6 @@ from .models import Product, Diamond, Gold, Silver, MetalRate
 from django.db import connection
 from django.http import JsonResponse
 from django.http import HttpResponse
-from django.db import IntegrityError
 from django.db import transaction
 from django.db.models import Q
 from django.utils.timezone import now, localtime
@@ -35,7 +34,7 @@ def add_product(request):
                 diamond_shape=request.POST.get('diamond_shape'),
                 diamond_type=request.POST.get('diamond_type'),
                 diamond_color=request.POST.get('diamond_color'),
-                diamond_carat=request.POST.get('diamond_carat'),
+                diamond_carat=float(request.POST.get('diamond_carat')),
                 diamond_mrp=request.POST.get('diamond_mrp'),
             )
         elif category == 'gold':
@@ -43,11 +42,11 @@ def add_product(request):
                 product=product,
                 gold_id=request.POST.get('Gold_p_id'),
                 gold_category=request.POST.get('gold_category'),
-                weight=request.POST.get('product_weight'),
+                weight=float(request.POST.get('product_weight')),
                 carat=request.POST.get('gold_carat'),
                 labour_percentage=request.POST.get('gold_labour'),
                 description=request.POST.get('gold_description'),
-                diamond_weight_in_gold=request.POST.get('diamond_weight'),
+                diamond_weight_in_gold=float(request.POST.get('diamond_weight')),
                 gold_mrp=request.POST.get('gold_mrp'),
                 bangle_size=request.POST.get('bangles_size'),
                 ring_bracelet_size=request.POST.get('ring_bracelet_size'),
@@ -57,7 +56,8 @@ def add_product(request):
                 product=product,
                 silver_id=request.POST.get('Silver_p_id'),
                 silver_category=request.POST.get('silver_category'),
-                weight=request.POST.get('silver_weight'),
+                weight=float(request.POST.get('silver_weight')),
+                diamond_weight_in_silver=float(request.POST.get('diamond_weight_silver')),
                 silver_mrp=request.POST.get('silver_mrp'),
                 bangle_size=request.POST.get('silver_bangles_size'),
                 ring_bracelet_size=request.POST.get('silver_ring_bracelet_size'),
@@ -80,7 +80,7 @@ def add_product(request):
 
 def delete_product(request):
     if request.method == "POST":
-        product_id = request.POST.get("product-id-delete")
+        product_id = request.POST.get("product_id")
 
         try:
             # Get the product using the ID
@@ -95,6 +95,7 @@ def delete_product(request):
                 Silver.objects.filter(product=product).delete()
 
             # Delete the product itself
+            messages.success(request, f"Product ID : {product.id} deleted successfully!")
             product.delete()
 
         except Exception as e:
@@ -182,7 +183,7 @@ def toggle_product_status(request, product_id):
         product.status = 0 if product.status == 1 else 1
         product.save()
         status_message = "enabled" if product.status == 1 else "disabled"
-        messages.success(request, f"Product '{product.product_name}' has been {status_message}.")
+        # messages.success(request, f"Product '{product.product_name}' has been {status_message}.")
 
     # Re-fetch products and filters to render the updated page
     category_filter = request.POST.get('category', '').strip()
@@ -205,6 +206,7 @@ def toggle_product_status(request, product_id):
     }
     return render(request, 'view_product.html', context)
 
+            # Handle fetching the product details (we do not update yet)
 def update_product(request):
     product = None
     diamond = None
@@ -215,7 +217,6 @@ def update_product(request):
     if request.method == 'POST':
         # Handling the first form to fetch the product based on product_id
         product_id = request.POST.get('product_id')
-        
         if product_id:
             # Get the product instance
             product = get_object_or_404(Product, id=product_id)
@@ -229,7 +230,7 @@ def update_product(request):
             elif product.category == 'silver':
                 silver = get_object_or_404(Silver, product=product)
 
-            return render(request, 'update_product.html', {
+    return render(request, 'update_product.html', {
                 'product': product,
                 'diamond': diamond,
                 'gold': gold,
@@ -237,52 +238,55 @@ def update_product(request):
                 'fetch_product': True  # This is to distinguish between the "fetch" and "update" form
             })
 
-        # Handling the second form to update product details
-        if request.POST.get('update_product'):
-            product_id = request.POST.get('product_id')
-            if product_id:
-                # Get the product instance again
-                product = get_object_or_404(Product, id=product_id)
-                product.product_name = request.POST.get('product_name', product.product_name)
-                product.category = request.POST.get('category', product.category)
-                product.save()
+def save_updated_data(request):
+    # Handling the second form to update product details
+    if request.method=='POST':
+        product_id = request.POST.get('product_id')
+        if product_id:
+            # Get the product instance again
+            product = get_object_or_404(Product, id=product_id)
+            product.product_name = request.POST.get('product_name', product.product_name)
+            product.category = request.POST.get('category', product.category)
+            product.save()
 
-                # Depending on the category, update the respective product details
-                if product.category == 'diamond':
-                    diamond = get_object_or_404(Diamond, product=product)
-                    diamond_id=request.POST.get('Diamond-Id'),
-                    diamond_shape=request.POST.get('diamond_shape'),
-                    diamond_type=request.POST.get('diamond_type'),
-                    diamond_color=request.POST.get('diamond_color'),
-                    diamond_carat=request.POST.get('diamond_carat'),
-                    diamond_mrp=request.POST.get('diamond_mrp',diamond.diamond_mrp),
-                    diamond.save()
+            # Depending on the category, update the respective product details
+            if product.category == 'diamond':
+                diamond = get_object_or_404(Diamond, product=product)
+                diamond.diamond_id=request.POST.get('Diamond-Id')
+                diamond.product_name = request.POST.get('product_name')
+                diamond.diamond_shape=request.POST.get('diamond_shape')
+                diamond.diamond_type=request.POST.get('diamond_type')
+                diamond.diamond_color=request.POST.get('diamond_color')
+                diamond.diamond_carat=float(request.POST.get('diamond_carat'))
+                diamond.diamond_mrp=float(request.POST.get('diamond_mrp'))
+                diamond.save()
+                
 
-                elif product.category == 'gold':
-                    gold = get_object_or_404(Gold, product=product)
-                    gold.gold_id = request.POST.get('Gold_p_id', gold.gold_id)
-                    gold.gold_category = request.POST.get('gold_category', gold.gold_category)
-                    gold.weight = request.POST.get('gold_weight', gold.weight)
-                    gold.carat = request.POST.get('gold_carat', gold.carat)
-                    gold.labour_percentage = request.POST.get('gold_labour', gold.labour_percentage)
-                    gold.description = request.POST.get('gold_description', gold.description)
-                    gold.diamond_weight_in_gold = request.POST.get('diamond_weight', gold.diamond_weight_in_gold)
-                    gold.gold_mrp = request.POST.get('gold_mrp', gold.gold_mrp)
-                    gold.bangle_size = request.POST.get('bangles_size', gold.bangle_size)
-                    gold.ring_bracelet_size = request.POST.get('ring_bracelet_size', gold.ring_bracelet_size)
-                    gold.save()
+            elif product.category == 'gold':
+                gold = get_object_or_404(Gold, product=product)
+                gold.gold_id = request.POST.get('Gold_p_id')
+                gold.gold_category = request.POST.get('gold_category')
+                gold.weight = request.POST.get('gold_weight')
+                gold.carat = request.POST.get('gold_carat')
+                gold.labour_percentage = request.POST.get('gold_labour')
+                gold.description = request.POST.get('gold_description')
+                gold.diamond_weight_in_gold = request.POST.get('diamond_weight')
+                gold.gold_mrp = request.POST.get('gold_mrp')
+                gold.bangle_size = request.POST.get('bangles_size')
+                gold.ring_bracelet_size = request.POST.get('ring_bracelet_size')
+                gold.save()
 
-                elif product.category == 'silver':
-                    silver = get_object_or_404(Silver, product=product)
-                    silver.silver_id = request.POST.get('Silver_p_id', silver.silver_id)
-                    silver.silver_category = request.POST.get('silver_category', silver.silver_category)
-                    silver.weight = request.POST.get('silver_weight', silver.weight)
-                    silver.silver_mrp = request.POST.get('silver_mrp', silver.silver_mrp)
-                    silver.bangle_size = request.POST.get('silver_bangles_size', silver.bangle_size)
-                    silver.ring_bracelet_size = request.POST.get('silver_ring_bracelet_size', silver.ring_bracelet_size)
-                    silver.save()
-
-                return redirect('update_product', product_id=product.id)
+            elif product.category == 'silver':
+                silver = get_object_or_404(Silver, product=product)
+                silver.silver_id = request.POST.get('Silver_p_id')
+                silver.silver_category = request.POST.get('silver_category')
+                silver.weight = request.POST.get('silver_weight')
+                silver.silver_mrp = request.POST.get('silver_mrp')
+                silver.bangle_size = request.POST.get('silver_bangles_size')
+                silver.ring_bracelet_size = request.POST.get('silver_ring_bracelet_size')
+                silver.save()
+        messages.success(request, f"Product ID : {product.id} updated successfully!")       
+    return redirect('/update_product/')
 
     return render(request, 'update_product.html', {
         'product': product,

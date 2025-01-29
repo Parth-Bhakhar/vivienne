@@ -116,11 +116,21 @@
 
 <div class="container">
     <h1>Add Product</h1>
+
+{% if messages %}
+    <div id="success-message" class="alert alert-success">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
     <form action="/add_product/" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         
         <!-- General Product Details -->
         <div class="form-group">
+
             <label for="product_name">Product Name:</label>
             <input type="text" class="form-control" id="product_name" name="product_name">
         </div>
@@ -173,7 +183,7 @@
 
             <div class="form-group">
                 <label for="diamond_carat">Diamond Carat:</label>
-                <input type="number" class="form-control" id="diamond_carat" name="diamond_carat">
+                <input type="text" class="form-control" id="diamond_carat" name="diamond_carat">
             </div>
             <div class="form-group">
                 <label for="diamond_mrp">MRP:</label>
@@ -242,7 +252,7 @@
         
             <div class="form-group">
                 <label for="product_weight">Weight (grams):</label>
-                <input type="number" class="form-control" id="product_weight" name="product_weight">
+                <input type="text" class="form-control" id="product_weight" name="product_weight">
             </div>
         
             <div class="form-group">
@@ -276,7 +286,7 @@
         
             <div class="form-group">
                 <label for="diamond_weight">Diamond Weight (grams) in Gold:</label>
-                <input type="number" class="form-control" id="diamond_weight" name="diamond_weight">
+                <input type="text" class="form-control" id="diamond_weight" name="diamond_weight">
             </div>
 
             <div class="form-group">
@@ -341,13 +351,18 @@
             </div>
         
             <div class="form-group">
+                <label for="silver_weight">Weight (grams):</label>
+                <input type="text" class="form-control" id="silver_weight" name="silver_weight">
+            </div>
+
+            <div class="form-group">
+                <label for="diamond_weight_silver">Diamond Weight (grams) in Silver:</label>
+                <input type="text" class="form-control" id="diamond_weight_silver" name="diamond_weight_silver">
+            </div>
+
+            <div class="form-group">
                 <label for="silver_mrp">MRP:</label>
                 <input type="number" class="form-control" id="silver_mrp" name="silver_mrp">
-            </div>
-        
-            <div class="form-group">
-                <label for="silver_weight">Weight (grams):</label>
-                <input type="number" class="form-control" id="silver_weight" name="silver_weight">
             </div>
         
             <div class="form-group">
