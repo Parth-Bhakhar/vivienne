@@ -51,6 +51,7 @@
                         <th class="px-6 py-3 text-left">Product ID</th>
                         <th class="px-6 py-3 text-left">Product Name</th>
                         <th class="px-6 py-3 text-left">Category</th>
+                        <th class="px-6 py-3 text-left">Sub-Category</th>
                         <th class="px-6 py-3 text-left">Details</th>
                         <th class="px-6 py-3 text-left">Status</th>
                         <th class="px-6 py-3 text-left">Action</th>
@@ -62,22 +63,26 @@
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4">{{ product.id }}</td>
                         <td class="px-6 py-4 font-medium text-gray-900">{{ product.product_name }}</td>
-                        <td class="px-6 py-4 text-gray-700">{{ product.category }}</td>
-                        <td class="px-6 py-4 text-gray-700">
+                        <td class="px-6 py-4 text-gray-1000">{{ product.category }}</td>
+                        <td class="px-6 py-4 text-gray-1000">{{ product.diamond_details.diamond_type }}{{ product.gold_details.gold_category }}{{ product.silver_details.silver_category }}</td>
+                        <td class="px-6 py-4 text-gray-1000">
                             {% if product.category == 'diamond' %}
                                 Shape: {{ product.diamond_details.diamond_shape }}<br>
-                                Type: {{ product.diamond_details.diamond_type }}<br>
                                 Carat: {{ product.diamond_details.diamond_carat }}<br>
+                                Quantity: {{ product.diamond_details.diamond_quantity }}<br>
                                 MRP: {{ product.diamond_details.diamond_mrp }}
                             {% elif product.category == 'gold' %}
-                                Weight: {{ product.gold_details.weight }} g<br>
+                                Weight: {{ product.gold_details.weight }}<br>
                                 Carat: {{ product.gold_details.carat }}<br>
+                                Quantity: {{ product.gold_details.gold_quantity }}<br>
                                 MRP: {{ product.gold_details.gold_mrp }}
                             {% elif product.category == 'silver' %}
-                                Weight: {{ product.silver_details.weight }} g<br>
+                                Weight: {{ product.silver_details.weight }}<br>
+                                Quantity: {{ product.silver_details.silver_quantity }}<br>
                                 MRP: {{ product.silver_details.silver_mrp }}
                             {% endif %}
                         </td>
+
                         <td class="px-6 py-4">
                             <span class="inline-flex px-4 py-2 rounded-lg text-sm font-medium {% if product.status %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
                                 {% if product.status %}Enabled{% else %}Disabled{% endif %}
@@ -93,13 +98,13 @@
                         </td>
                         <td class="px-6 py-4">
                             {% if product.product_picture1 %}
-                            <img src="{{ product.product_picture1.url }}" alt="Product Image 1" class="w-16 h-16 object-cover rounded-lg">
+                            <img src="{{ product.product_picture1 }}" alt="Product Image 1" class="w-16 h-16 object-cover rounded-lg">
                             {% endif %}
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">No products found.</td>
+                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">No products found.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -112,7 +117,7 @@
         </div>
     </div>
 
-    <!-- JavaScript for Success Message -->
+
     <script>
         window.onload = function() {
             const successMessage = document.getElementById('success-message');

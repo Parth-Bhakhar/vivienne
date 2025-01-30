@@ -53,7 +53,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'vivienne.urls'
 
-MEDIA_URL = '/media/'
+MEDIA_URL = 'media/'
 
 TEMPLATES = [
     {

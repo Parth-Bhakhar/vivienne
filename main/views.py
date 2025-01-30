@@ -126,8 +126,7 @@ def view_product(request):
             Q(id__icontains=search_query) |
             Q(product_name__icontains=search_query)
         )
-
-    # Prepare context for the template
+        
     context = {
         'products': products,
         'selected_category': category_filter,
