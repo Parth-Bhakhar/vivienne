@@ -28,4 +28,6 @@ urlpatterns = [
     path('update_rates/', update_rates, name='update_rates'),
     path('toggle-status/<int:product_id>/', toggle_product_status, name='toggle_product_status'),
     path('save_updated_data/', save_updated_data, name='save_updated_data'),
+    path('view_products/', view_products, name='view_products'),
+    path('error/', error, name='error'),
 ]

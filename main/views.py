@@ -35,6 +35,7 @@ def add_product(request):
                 diamond_type=request.POST.get('diamond_type'),
                 diamond_color=request.POST.get('diamond_color'),
                 diamond_carat=float(request.POST.get('diamond_carat')),
+                diamond_quantity=request.POST.get('diamond_quantity'),
                 diamond_mrp=request.POST.get('diamond_mrp'),
             )
         elif category == 'gold':
@@ -45,6 +46,7 @@ def add_product(request):
                 weight=float(request.POST.get('product_weight')),
                 carat=request.POST.get('gold_carat'),
                 labour_percentage=request.POST.get('gold_labour'),
+                gold_quantity=request.POST.get('gold_quantity'),
                 description=request.POST.get('gold_description'),
                 diamond_weight_in_gold=float(request.POST.get('diamond_weight')),
                 gold_mrp=request.POST.get('gold_mrp'),
@@ -57,6 +59,7 @@ def add_product(request):
                 silver_id=request.POST.get('Silver_p_id'),
                 silver_category=request.POST.get('silver_category'),
                 weight=float(request.POST.get('silver_weight')),
+                silver_quantity=request.POST.get('silver_quantity'),
                 diamond_weight_in_silver=float(request.POST.get('diamond_weight_silver')),
                 silver_mrp=request.POST.get('silver_mrp'),
                 bangle_size=request.POST.get('silver_bangles_size'),
@@ -99,7 +102,7 @@ def delete_product(request):
             product.delete()
 
         except Exception as e:
-            return HttpResponse(f"An error occurred: {str(e)}")
+             return redirect('/error/')  
 
     return render(request, "delete_product.html")
  
@@ -178,18 +181,24 @@ def update_rates(request):
 
 
 def toggle_product_status(request, product_id):
-    if request.method == 'POST':
-        product = get_object_or_404(Product, id=product_id)
-        product.status = 0 if product.status == 1 else 1
-        product.save()
-        status_message = "enabled" if product.status == 1 else "disabled"
-        # messages.success(request, f"Product '{product.product_name}' has been {status_message}.")
+    try:
+        if request.method == 'POST':
+            product = get_object_or_404(Product, id=product_id)
+            product.status = not product.status  # Toggle status
+            product.save()
 
-    # Re-fetch products and filters to render the updated page
-    category_filter = request.POST.get('category', '').strip()
-    search_query = request.POST.get('search', '').strip()
+        return redirect(request.META.get('HTTP_REFERER', 'view_products'))
+    
+    except Exception as e:
+        messages.error(request, f"An error occurred: {str(e)}")
+        return redirect('/error/')
+
+def view_products(request):
+    category_filter = request.GET.get('category', '').strip()
+    search_query = request.GET.get('search', '').strip()
 
     products = Product.objects.all()
+
     if category_filter and category_filter.lower() != 'all':
         products = products.filter(category=category_filter)
 
@@ -208,35 +217,36 @@ def toggle_product_status(request, product_id):
 
             # Handle fetching the product details (we do not update yet)
 def update_product(request):
-    product = None
-    diamond = None
-    gold = None
-    silver = None
+    try:
+        product = None
+        diamond = None
+        gold = None
+        silver = None
 
-    # Check if the request method is POST
-    if request.method == 'POST':
-        # Handling the first form to fetch the product based on product_id
-        product_id = request.POST.get('product_id')
-        if product_id:
-            # Get the product instance
-            product = get_object_or_404(Product, id=product_id)
-            
-            # Handle fetching the product details (we do not update yet)
-            # These details will be available in the form after fetching the product
-            if product.category == 'diamond':
-                diamond = get_object_or_404(Diamond, product=product)
-            elif product.category == 'gold':
-                gold = get_object_or_404(Gold, product=product)
-            elif product.category == 'silver':
-                silver = get_object_or_404(Silver, product=product)
+        if request.method == 'POST':
+            product_id = request.POST.get('product_id')
+            if product_id:
+                product = get_object_or_404(Product, id=product_id)
 
-    return render(request, 'update_product.html', {
-                'product': product,
-                'diamond': diamond,
-                'gold': gold,
-                'silver': silver,
-                'fetch_product': True  # This is to distinguish between the "fetch" and "update" form
-            })
+                if product.category == 'diamond':
+                    diamond = get_object_or_404(Diamond, product=product)
+                elif product.category == 'gold':
+                    gold = get_object_or_404(Gold, product=product)
+                elif product.category == 'silver':
+                    silver = get_object_or_404(Silver, product=product)
+
+        return render(request, 'update_product.html', {
+            'product': product,
+            'diamond': diamond,
+            'gold': gold,
+            'silver': silver,
+            'fetch_product': True
+        })
+    
+    except Exception as e:
+        messages.error(request, f"An error occurred: {str(e)}")
+        return redirect('error')
+
 
 def save_updated_data(request):
     # Handling the second form to update product details
@@ -295,3 +305,6 @@ def save_updated_data(request):
         'silver': silver,
         'fetch_product': False,  # This indicates that the product hasn't been fetched yet
     })
+
+def error(request):
+    return render(request, "error.html")

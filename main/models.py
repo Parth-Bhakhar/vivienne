@@ -39,6 +39,7 @@ class Diamond(models.Model):
     diamond_type = models.CharField(max_length=50, choices=[('natural', 'Natural'), ('lab_grown', 'Lab Grown')])
     diamond_color = models.CharField(max_length=50)
     diamond_carat = models.FloatField()
+    diamond_quantity = models.PositiveIntegerField()
     diamond_mrp = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
@@ -53,6 +54,7 @@ class Gold(models.Model):
     carat = models.FloatField(choices=[(91.60, '22K'), (84.00, '20K'), (76.00, '18K'), (58.33, '14K')])
     labour_percentage = models.PositiveIntegerField()
     description = models.TextField()
+    gold_quantity = models.PositiveIntegerField()
     diamond_weight_in_gold = models.FloatField()
     gold_mrp = models.DecimalField(max_digits=10, decimal_places=2)
     bangle_size = models.CharField(max_length=10, null=True, blank=True)
@@ -67,6 +69,7 @@ class Silver(models.Model):
     silver_id = models.CharField(max_length=255, unique=True)
     silver_category = models.CharField(max_length=255)
     weight = models.FloatField()
+    silver_quantity = models.PositiveIntegerField()
     diamond_weight_in_silver = models.FloatField()
     silver_mrp = models.DecimalField(max_digits=10, decimal_places=2)
     bangle_size = models.CharField(max_length=10, null=True, blank=True)

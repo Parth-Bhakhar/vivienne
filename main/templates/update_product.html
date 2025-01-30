@@ -242,13 +242,13 @@
         
         <!-- Size Options for Bangles -->
         <div id="bangles_size" class="form-group">
-            <label for="bangles_size_select">Bangle Size:</label>
-            <select class="form-control" id="bangles_size_select" name="bangles_size">
+            <label for="bangle_size">Bangle Size:</label>
+            <select class="form-control" id="bangle_size" name="bangles_size">
                 <option value="" selected>Select Size</option>
-                <option value="2/2""{% if gold.bangle_size == '2/2' %}selected{% endif %}>2/2</option>
-                <option value="2/4""{% if gold.bangle_size == '2/4' %}selected{% endif %}>2/4</option>
-                <option value="2/6""{% if gold.bangle_size == '2/6' %}selected{% endif %}>2/6</option>
-                <option value="2/8""{% if gold.bangle_size == '2/8' %}selected{% endif %}>2/8</option>
+                <option value="2/2"{% if gold.bangle_size == '2/2' %}selected{% endif %}>2/2</option>
+                <option value="2/4"{% if gold.bangle_size == '2/4' %}selected{% endif %}>2/4</option>
+                <option value="2/6"{% if gold.bangle_size == '2/6' %}selected{% endif %}>2/6</option>
+                <option value="2/8"{% if gold.bangle_size == '2/8' %}selected{% endif %}>2/8</option>
             </select>
         </div>
         
@@ -266,24 +266,24 @@
         <div class="form-group">
             <label for="gold_carat">Gold Carat:</label>
             <select class="form-control" id="gold_carat" name="gold_carat">
-                <option value="91.60""{% if gold.carat == '22' %}selected{% endif %}>22</option>
-                <option value="84.00""{% if gold.carat == '20' %}selected{% endif %}>20</option>
-                <option value="76.00""{% if gold.carat == '18' %}selected{% endif %}>18</option>
-                <option value="58.33""{% if gold.carat == '14' %}selected{% endif %}>14</option>
+                <option value="91.60"{% if gold.carat == '22' %}selected{% endif %}>22</option>
+                <option value="84.00"{% if gold.carat == '20' %}selected{% endif %}>20</option>
+                <option value="76.00"{% if gold.carat == '18' %}selected{% endif %}>18</option>
+                <option value="58.33"{% if gold.carat == '14' %}selected{% endif %}>14</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="gold_labour">Gold Labour:</label>
             <select class="form-control" id="gold_labour" name="gold_labour">
-                <option value="8""{% if gold.carat == '8%' %}selected{% endif %}>8%</option>
-                <option value="10""{% if gold.carat == '10%' %}selected{% endif %}>10%</option>
-                <option value="12""{% if gold.carat == '12%' %}selected{% endif %}>12%</option>
-                <option value="15""{% if gold.carat == '15%' %}selected{% endif %}>15%</option>
-                <option value="18""{% if gold.carat == '18%' %}selected{% endif %}>18%</option>
-                <option value="20""{% if gold.carat == '20%' %}selected{% endif %}>20%</option>
-                <option value="25""{% if gold.carat == '25%' %}selected{% endif %}>25%</option>
-                <option value="30""{% if gold.carat == '30%' %}selected{% endif %}>30%</option>
+                <option value="8"{% if gold.carat == '8%' %}selected{% endif %}>8%</option>
+                <option value="10"{% if gold.carat == '10%' %}selected{% endif %}>10%</option>
+                <option value="12"{% if gold.carat == '12%' %}selected{% endif %}>12%</option>
+                <option value="15"{% if gold.carat == '15%' %}selected{% endif %}>15%</option>
+                <option value="18"{% if gold.carat == '18%' %}selected{% endif %}>18%</option>
+                <option value="20"{% if gold.carat == '20%' %}selected{% endif %}>20%</option>
+                <option value="25"{% if gold.carat == '25%' %}selected{% endif %}>25%</option>
+                <option value="30"{% if gold.carat == '30%' %}selected{% endif %}>30%</option>
             </select>
         </div>
 
@@ -416,7 +416,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         const messageDiv = document.getElementById("message-container");
 
-        if (messageDiv) {
+        if (m98+essageDiv) {
             // Automatically fade out the message after 3 seconds
             setTimeout(function () {
                 messageDiv.style.opacity = "0";

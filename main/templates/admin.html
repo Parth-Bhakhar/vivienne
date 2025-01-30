@@ -4,381 +4,180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    
-    <!-- Bootstrap CSS (Bootstrap 4.5.2) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-    
-    <!-- Custom CSS for Admin Panel -->
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS for Additional Styling -->
     <style>
-        /* Sidebar Styles */
-        .sidebar {
-            height: 100vh;
-            background-color: #800020;
-            color: #fff;
-            position: fixed;
-            width: 250px;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        .sidebar a {
-            color: #fff;
-            text-decoration: none;
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
         }
-        .sidebar .nav-link {
-            padding: 20px;
-            border-bottom: 1px solid #FADADD;
-        }
-        .sidebar .nav-link:hover {
-            background-color: #FADADD;
-            border-left: 4px solid #800020;
-            color: black;
-        }
-        
-        /* Main Content */
-        .content {
-            margin-left: 250px;
-            padding: 30px;
-            background-color: #F5F5F5;
-        }
-    
-        /* Navbar Styles */
-        .navbar {
-            background-color: #800020;
-        }
-        .navbar .navbar-brand {
-            color: #fff;
-        }
-        .navbar .navbar-nav .nav-link {
-            color: #fff;
-        }
-        
-        .navbar .navbar-nav .nav-link:hover {
-            background-color: #FADADD;
-        }
-    
-        /* Card Styles */
-        .card {
-            border: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            margin: 30px;
-            background-color: #fff;
-        }
-
-        .card-header {
-            background-color: #800020;
-            color: #fff;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .card-body {
-            background-color: #F5F5F5;
-            padding: 30px;
-            text-align: center;
-        }
-
-        /* Add Product Button */
-        .card-body button {
-            background-color: #800020;
-            color: white;
-            padding: 15px 25px;
-            border: none;
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
             border-radius: 4px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: auto;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
         }
 
-        /* Button Hover Effects */
-        .card-body button:hover {
-            background-color: #FADADD;
-            color: #800020;
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Footer */
-        footer {
-            background-color: #800020;
-            color: #fff;
-            text-align: center;
-            padding: 15px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        /* Add Gold Rate Section */
-        .gold-rate-section {
-            background-color: #FADADD;
-            color: #800020;
-            padding: 30px;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .gold-rate-section label {
-            font-weight: bold;
-            color: #800020;
-            margin-top: 10px;
-        }
-
-        .gold-rate-section input {
-            width: 100%;
-            padding: 10px;
-            font-size: 1rem;
-            border: 2px solid #800020;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-
-        #datetime p {
-            display: inline;
-            margin-right: 10px;
-            color: #F5F5F5;
-        }
-        /* Submit Button */
-        button[type="submit"] {
-            background-color: #800020;  /* Set the background color to #800020 */
-            color: white;
-        }
-        button[type="submit"]:hover {
-        color: white;
-        transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .content {
-                margin-left: 0;
+        /* Flash Message Animation */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
             }
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-            .navbar {
-                padding: 10px;
+            to {
+                transform: translateX(0);
             }
         }
 
-        #flash-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1050;
-            padding: 15px;
-            border-radius: 5px;
-            display: none;
+        .flash-message {
+            animation: slideIn 0.5s ease-out;
         }
     </style>
 </head>
-<body>
-
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="d-flex justify-content-center py-4">
-            <h3 class="text-white">Admin</h3>
+    <div class="fixed inset-y-0 left-0 w-64 bg-gray-800 text-white shadow-lg">
+        <div class="p-6 text-center">
+            <h1 class="text-2xl font-bold text-indigo-400">Admin Panel</h1>
+            <p class="text-sm text-gray-400">Manage your system</p>
         </div>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link active" href="/admin">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/add_product">
-                    <i class="fas fa-plus-circle"></i> Add Product
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/update_product">
-                    <i class="fas fa-edit"></i> Update Product
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/delete_product">
-                    <i class="fas fa-trash"></i> Delete Product
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/order_details">
-                    <i class="fas fa-box"></i> Order Details
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/view_product">
-                    <i class="bi bi-table"></i> View Product
-                </a>
-            </li>
-        </ul>
+        <nav class="mt-6">
+            <ul class="space-y-2">
+                <li>
+                    <a href="/admin" class="flex items-center p-3 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/add_product" class="flex items-center p-3 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-plus-circle mr-3"></i> Add Product
+                    </a>
+                </li>
+                <li>
+                    <a href="/update_product" class="flex items-center p-3 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-edit mr-3"></i> Update Product
+                    </a>
+                </li>
+                <li>
+                    <a href="/delete_product" class="flex items-center p-3 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-trash mr-3"></i> Delete Product
+                    </a>
+                </li>
+                <li>
+                    <a href="/order_details" class="flex items-center p-3 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-box mr-3"></i> Order Details
+                    </a>
+                </li>
+                <li>
+                    <a href="/view_product" class="flex items-center p-3 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-table mr-3"></i> View Product
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="content">
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-dark">
-            <a class="navbar-brand"style="margin-right: 80px;">Admin Dashboard</a>
-       <!-- Date and Time Display -->
-<div id="datetime" class="text-center my-3">
-    <p id="date" style="display: inline; margin-right: 10px;"></p>
-    <p id="time" style="display: inline;"></p>
-</div>
-            <div class="ml-auto">
-                <button class="btn btn-light">Logout</button>
-            </div>
-        </nav>
-
-
-        <!-- Main Dashboard Cards -->
-        <div class="container">
-            <div class="row">
-                <!-- Add Product Card -->
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="card">
-                        <div class="card-header">
-                            Add Product
-                        </div>
-                        <div class="card-body text-center">
-                            <a href="/add_product">
-                                <button>Add Product</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Update Product Card -->
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="card">
-                        <div class="card-header">
-                            Update Product
-                        </div>
-                        <div class="card-body text-center">
-                            <a href="/update_product">
-                                <button>Update Product</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Delete Product Card -->
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="card">
-                        <div class="card-header">
-                            Delete Product
-                        </div>
-                        <div class="card-body text-center">
-                            <a href="/delete_product">
-                                <button>Delete Product</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Order Details Card -->
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="card">
-                        <div class="card-header">
-                            Order Details
-                        </div>
-                        <div class="card-body text-center">
-                            <a href="/order_details">
-                                <button>View Orders</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Add Gold Rate Section -->
-            <div class="gold-rate-section">
-                <h4 class="text-center">Update Gold and Silver Rates</h4>
-                <form method="POST" action="/update_rates/">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="gold-rate">Gold Rate (per gram):</label>
-                        <input type="number" id="gold-rate" name="gold_rate" class="form-control" placeholder="Enter current gold rate">
-
-                        <label for="silver-rate">Silver Rate (per gram):</label>
-                        <input type="number" id="silver-rate" name="silver_rate" class="form-control" placeholder="Enter current silver rate">
-                    </div>
-                    <button type="submit" class="btn btn">Update Rates</button>
-                </form>
-            </div>
-            {% if messages %}
-                <div id="flash-message" class="alert alert-success" role="alert">
-                    {% for message in messages %}
-                        <span id="message-content">{{ message }}</span>
-                    {% endfor %}
-                </div>
-            {% endif %}
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-indigo-400">Dashboard</h2>
+            <button class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition-colors">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </button>
         </div>
+
+        <!-- Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Add Product Card -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                <h3 class="text-xl font-semibold text-indigo-500">Add Product</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">Add new products to your inventory.</p>
+                <a href="/add_product" class="mt-4 inline-block bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition-colors">
+                    <i class="fas fa-plus-circle mr-2"></i> Add Product
+                </a>
+            </div>
+
+            <!-- Update Product Card -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                <h3 class="text-xl font-semibold text-indigo-500">Update Product</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">Update existing product details.</p>
+                <a href="/update_product" class="mt-10 inline-block bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition-colors">
+                    <i class="fas fa-edit mr-2"></i> Update Product
+                </a>
+            </div>
+
+            <!-- Delete Product Card -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                <h3 class="text-xl font-semibold text-indigo-500">Delete Product</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">Remove products from your inventory.</p>
+                <a href="/delete_product" class="mt-4 inline-block bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition-colors">
+                    <i class="fas fa-trash mr-2"></i> Delete Product
+                </a>
+            </div>
+
+            <!-- Order Details Card -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                <h3 class="text-xl font-semibold text-indigo-500">Order Details</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">View and manage customer orders.</p>
+                <a href="/order_details" class="mt-4 inline-block bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition-colors">
+                    <i class="fas fa-box mr-2"></i> View Orders
+                </a>
+            </div>
+        </div>
+
+        <!-- Gold Rate Section -->
+        <div class="mt-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold text-indigo-500 mb-4">Update Gold and Silver Rates</h3>
+            <form method="POST" action="/update_rates/" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    <div>
+                        <label for="gold-rate" class="block text-gray-700 dark:text-gray-300">Gold Rate (per gram):</label>
+                        <input type="number" id="gold-rate" name="gold_rate" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700" placeholder="Enter current gold rate">
+                    </div>
+                    <div>
+                        <label for="silver-rate" class="block text-gray-700 dark:text-gray-300">Silver Rate (per gram):</label>
+                        <input type="number" id="silver-rate" name="silver_rate" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700" placeholder="Enter current silver rate">
+                    </div>
+                    <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition-colors">
+                        Update Rates
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Flash Message -->
+        {% if messages %}
+            <div id="flash-message" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flash-message">
+                {% for message in messages %}
+                    <span>{{ message }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Admin Dashboard | All Rights Reserved</p>
+    <footer class="fixed bottom-0 w-full bg-gray-800 text-white text-center py-3">
+        <p>&copy; 2025 Admin Dashboard. All rights reserved.</p>
     </footer>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-
-    <!-- JavaScript for Date and Time -->
+    <!-- Script for Flash Message -->
     <script>
-    function updateDateTime() {
-        var now = new Date();
-
-        // Date in dd/mm/yyyy format
-        var day = now.getDate().toString().padStart(2, '0');
-        var month = (now.getMonth() + 1).toString().padStart(2, '0');
-        var year = now.getFullYear();
-        var formattedDate = day + '/' + month + '/' + year;
-
-        // Time in hr:min format
-        var hours = now.getHours().toString().padStart(2, '0');
-        var minutes = now.getMinutes().toString().padStart(2, '0');
-        var formattedTime = hours + ':' + minutes;
-
-        // Display date and time
-        document.getElementById('date').textContent = 'Date: ' + formattedDate;
-        document.getElementById('time').textContent = 'Time: ' + formattedTime;
-    }
-
-    // Update every minute
-    setInterval(updateDateTime, 60000);
-    updateDateTime(); 
-
-    // Function to show success message
-    function showFlashMessage(message) {
-        var flashMessageElement = document.getElementById('flash-message');
-        var messageContent = document.getElementById('message-content');
-        
-        // Set the content of the flash message
-        messageContent.textContent = message;
-        
-        // Show the flash message
-        flashMessageElement.style.display = 'block';
-        
-        // Hide the flash message after 2 seconds
-        setTimeout(function() {
-            flashMessageElement.style.display = 'none';
-        }, 2000);
-    }
-
-    // Display the flash message if there are any messages
-    {% if messages %}
-        {% for message in messages %}
-            // Call the function to display the flash message
-            showFlashMessage('{{ message }}');
-        {% endfor %}
-    {% endif %}
+        setTimeout(() => {
+            const flashMessage = document.getElementById('flash-message');
+            if (flashMessage) {
+                flashMessage.remove();
+            }
+        }, 3000);
     </script>
-
 </body>
 </html>
+
+admin
