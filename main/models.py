@@ -24,9 +24,9 @@ class Product(models.Model):
 
 
     # Common fields for images
-    product_picture1 = models.ImageField(upload_to='media/', null=True, blank=True)
-    product_picture2 = models.ImageField(upload_to='media/', null=True, blank=True)
-    product_picture3 = models.ImageField(upload_to='media/', null=True, blank=True)
+    product_picture1 = models.ImageField(upload_to='media/')
+    product_picture2 = models.ImageField(upload_to='media/')
+    product_picture3 = models.ImageField(upload_to='media/')
 
     def __str__(self):
         return self.product_name

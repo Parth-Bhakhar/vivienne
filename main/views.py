@@ -20,8 +20,18 @@ def add_product(request):
         product_name = request.POST.get('product_name')
         category = request.POST.get('category')
 
-        # Create a product instance
-        product = Product(product_name=product_name, category=category)
+        image1 = request.FILES.get('image1')  # Get first image
+        image2 = request.FILES.get('image2')  # Get second image
+        image3 = request.FILES.get('image3')  # Get third image
+
+        # Save images to Product model
+        product = Product.objects.create(
+            product_name=product_name,
+            category=category,
+            product_picture1=image1,
+            product_picture2=image2,
+            product_picture3=image3,
+        )
 
         # Save product to get its ID
         product.save()
@@ -66,13 +76,7 @@ def add_product(request):
                 ring_bracelet_size=request.POST.get('silver_ring_bracelet_size'),
             )
 
-        # Handle image uploads
-        for i in range(1, 4):
-            image = request.FILES.get(f'product_picture{i}')
-            if image:
-                setattr(product, f'product_picture{i}', image)
-
-        # Save images
+        
         product.save()
 
         messages.success(request, 'Product added successfully!')
@@ -192,29 +196,7 @@ def toggle_product_status(request, product_id):
         messages.error(request, f"An error occurred: {str(e)}")
         return redirect('/error/')
 
-def view_products(request):
-    category_filter = request.GET.get('category', '').strip()
-    search_query = request.GET.get('search', '').strip()
 
-    products = Product.objects.all()
-
-    if category_filter and category_filter.lower() != 'all':
-        products = products.filter(category=category_filter)
-
-    if search_query:
-        products = products.filter(
-            Q(id__icontains=search_query) |
-            Q(product_name__icontains=search_query)
-        )
-
-    context = {
-        'products': products,
-        'selected_category': category_filter,
-        'search_query': search_query,
-    }
-    return render(request, 'view_product.html', context)
-
-            # Handle fetching the product details (we do not update yet)
 def update_product(request):
     try:
         product = None
@@ -256,6 +238,9 @@ def save_updated_data(request):
             product = get_object_or_404(Product, id=product_id)
             product.product_name = request.POST.get('product_name', product.product_name)
             product.category = request.POST.get('category', product.category)
+            product.image1 = request.FILES.get('image1', product.product_picture1)  # Get first image
+            product.image2 = request.FILES.get('image2', product.product_picture2)  # Get second image
+            product.image3 = request.FILES.get('image3', product.product_picture3)  # Get third image
             product.save()
 
             # Depending on the category, update the respective product details
@@ -268,6 +253,7 @@ def save_updated_data(request):
                 diamond.diamond_color=request.POST.get('diamond_color')
                 diamond.diamond_carat=float(request.POST.get('diamond_carat'))
                 diamond.diamond_mrp=float(request.POST.get('diamond_mrp'))
+                product.image1 = request.FILES.get('image1', product.product_picture1)
                 diamond.save()
                 
 

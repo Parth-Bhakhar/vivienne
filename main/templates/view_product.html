@@ -97,9 +97,7 @@
                             </form>
                         </td>
                         <td class="px-6 py-4">
-                            {% if product.product_picture1 %}
-                            <img src="{{ product.product_picture1 }}" alt="Product Image 1" class="w-16 h-16 object-cover rounded-lg">
-                            {% endif %}
+                            <img src="{{ product.product_picture1.url }}" class="w-20 h-20 object-cover rounded-lg" />
                         </td>
                     </tr>
                     {% empty %}
