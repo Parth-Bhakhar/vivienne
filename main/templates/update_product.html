@@ -305,14 +305,17 @@
         <div class="form-group">
             <label for="product_picture">Product Picture 1:</label>
             <input type="file" class="form-control-file" id="image1" name="image1" accept="image/*">
+            <img src="{{ product.product_picture1.url }}" class="object-cover rounded-lg" style="max-height: 80px; max-width: 80px; border-radius: 10px;" />
         </div>
         <div class="form-group">
             <label for="product_picture">Product Picture 2:</label>
             <input type="file" class="form-control-file" id="image2" name="image2" accept="image/*">
+            <img src="{{ product.product_picture2.url }}" class="object-cover rounded-lg" style="max-height: 80px; max-width: 80px; border-radius: 10px;" />
         </div>
         <div class="form-group">
             <label for="product_picture">Product Picture 3:</label>
             <input type="file" class="form-control-file" id="image3" name="image3" accept="image/*">
+            <img src="{{ product.product_picture3.url }}" class="object-cover rounded-lg" style="max-height: 80px; max-width: 80px; border-radius: 10px;" />
         </div>
     </div>
 

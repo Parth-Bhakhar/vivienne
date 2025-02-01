@@ -7,6 +7,8 @@ from django.http import HttpResponse
 from django.db import transaction
 from django.db.models import Q
 from django.utils.timezone import now, localtime
+import os
+from django.conf import settings
 
 
 
@@ -92,6 +94,22 @@ def delete_product(request):
         try:
             # Get the product using the ID
             product = get_object_or_404(Product, id=product_id)
+
+            # Delete images from storage
+            if product.product_picture1:
+                image1_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture1))
+                if os.path.exists(image1_path):
+                    os.remove(image1_path)
+
+            if product.product_picture2:
+                image2_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture2))
+                if os.path.exists(image2_path):
+                    os.remove(image2_path)
+
+            if product.product_picture3:
+                image3_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture3))
+                if os.path.exists(image3_path):
+                    os.remove(image3_path)
 
             # Check the category and delete related data
             if product.category == 'diamond':
@@ -238,10 +256,27 @@ def save_updated_data(request):
             product = get_object_or_404(Product, id=product_id)
             product.product_name = request.POST.get('product_name', product.product_name)
             product.category = request.POST.get('category', product.category)
-            product.image1 = request.FILES.get('image1', product.product_picture1)  # Get first image
-            product.image2 = request.FILES.get('image2', product.product_picture2)  # Get second image
-            product.image3 = request.FILES.get('image3', product.product_picture3)  # Get third image
+            if 'image1' in request.FILES:
+                if product.product_picture1:
+                    image1_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture1))
+                    if os.path.exists(image1_path):
+                        os.remove(image1_path)
+                product.product_picture1 = request.FILES['image1']
+            if 'image2' in request.FILES:
+                if product.product_picture2:
+                    image2_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture2))
+                    if os.path.exists(image2_path):
+                        os.remove(image2_path)
+
+                product.product_picture2 = request.FILES['image2']
+            if 'image3' in request.FILES:
+                if product.product_picture3:
+                    image3_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture3))
+                    if os.path.exists(image3_path):
+                        os.remove(image3_path)
+                product.product_picture3 = request.FILES['image3']
             product.save()
+
 
             # Depending on the category, update the respective product details
             if product.category == 'diamond':
