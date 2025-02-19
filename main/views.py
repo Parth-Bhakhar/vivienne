@@ -9,7 +9,13 @@ from django.db.models import Q
 import os
 from django.conf import settings
 from django.utils.timezone import now, localtime
+<<<<<<< HEAD
 import base64
+=======
+import os
+from django.conf import settings
+
+>>>>>>> 42c727bffe1434c2e91b3503b5bd38709eef4b3b
 
 
 def admin(request):
@@ -54,9 +60,24 @@ def add_product(request):
             product_name = request.POST.get('product_name')
             category = request.POST.get('category')
 
+<<<<<<< HEAD
             image1 = request.FILES.get('image1')  # Get first image
             image2 = request.FILES.get('image2')  # Get second image
             image3 = request.FILES.get('image3')  # Get third image
+=======
+        image1 = request.FILES.get('image1')  # Get first image
+        image2 = request.FILES.get('image2')  # Get second image
+        image3 = request.FILES.get('image3')  # Get third image
+
+        # Save images to Product model
+        product = Product.objects.create(
+            product_name=product_name,
+            category=category,
+            product_picture1=image1,
+            product_picture2=image2,
+            product_picture3=image3,
+        )
+>>>>>>> 42c727bffe1434c2e91b3503b5bd38709eef4b3b
 
             # Save images to Product model
             product = Product.objects.create(
@@ -67,6 +88,7 @@ def add_product(request):
                 product_picture3=image3,
             )
 
+<<<<<<< HEAD
             # Save product to get its ID
             product.save()
         
@@ -121,6 +143,15 @@ def add_product(request):
             product.save()
             messages.success(request, 'Product added successfully!')
             return redirect('add_product')
+=======
+        
+        product.save()
+
+        messages.success(request, 'Product added successfully!')
+        return redirect('add_product')
+
+    return render(request, 'add_product.html')
+>>>>>>> 42c727bffe1434c2e91b3503b5bd38709eef4b3b
 
         else:
             return render(request, 'add_product.html')
@@ -142,10 +173,36 @@ def delete_product(request):
                     if os.path.exists(image1_path):
                         os.remove(image1_path)
 
+<<<<<<< HEAD
                 if product.product_picture2:
                     image2_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture2))
                     if os.path.exists(image2_path):
                         os.remove(image2_path)
+=======
+            # Delete images from storage
+            if product.product_picture1:
+                image1_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture1))
+                if os.path.exists(image1_path):
+                    os.remove(image1_path)
+
+            if product.product_picture2:
+                image2_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture2))
+                if os.path.exists(image2_path):
+                    os.remove(image2_path)
+
+            if product.product_picture3:
+                image3_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture3))
+                if os.path.exists(image3_path):
+                    os.remove(image3_path)
+
+            # Check the category and delete related data
+            if product.category == 'diamond':
+                Diamond.objects.filter(product=product).delete()
+            elif product.category == 'gold':
+                Gold.objects.filter(product=product).delete()
+            elif product.category == 'silver':
+                Silver.objects.filter(product=product).delete()
+>>>>>>> 42c727bffe1434c2e91b3503b5bd38709eef4b3b
 
                 if product.product_picture3:
                     image3_path = os.path.join(settings.MEDIA_ROOT, str(product.product_picture3))
@@ -341,6 +398,7 @@ def save_updated_data(request):
                 diamond.description=request.POST.get('diamond_description')
                 diamond.tax=request.POST.get('tax')
                 diamond.diamond_mrp=float(request.POST.get('diamond_mrp'))
+                product.image1 = request.FILES.get('image1', product.product_picture1)
                 diamond.save()
                 
 
