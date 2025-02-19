@@ -190,7 +190,21 @@
             <label for="diamond_carat">Diamond Carat:</label>
             <input type="number" class="form-control" id="diamond_carat" name="diamond_carat" value="{{ diamond.diamond_carat }}">
         </div>
-
+        <div class="form-group">
+            <label for="diamond_quantity">Quantity:</label>
+            <input type="number" class="form-control" id="diamond_quantity" name="diamond_quantity" value="{{ diamond.diamond_quantity }}">
+        </div>
+        <div class="form-group">
+            <label for="diamond_description">Description:</label>
+            <textarea class="form-control" id="diamond_description" name="diamond_description">{{ diamond.description }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="tax">Tax:</label>
+            <select class="form-control" id="tax" name="tax">
+                <option value="3"{% if gold.tax == '3' %}selected{% endif %}>3%</option>
+                <option value="18"{% if gold.tax == '18' %}selected{% endif %}>18%</option>
+            </select>
+        </div>
         <div class="form-group">
             <label for="diamond_mrp">MRP:</label>
             <input type="number" class="form-control" id="diamond_mrp" name="diamond_mrp" value="{{ diamond.diamond_mrp }}">
@@ -198,15 +212,15 @@
 
         <div class="form-group">
             <label for="product_picture">Product Picture 1:</label>
-            <input type="file" class="form-control-file" id="product_picture" name="product_picture1" accept="image/*">
+            <input type="file" class="form-control-file" id="image1" name="image1" accept="image/*">
         </div>
         <div class="form-group">
             <label for="product_picture">Product Picture 2:</label>
-            <input type="file" class="form-control-file" id="product_picture" name="product_picture2" accept="image/*">
+            <input type="file" class="form-control-file" id="image2" name="image2" accept="image/*">
         </div>
         <div class="form-group">
             <label for="product_picture">Product Picture 3:</label>
-            <input type="file" class="form-control-file" id="product_picture" name="product_picture3" accept="image/*">
+            <input type="file" class="form-control-file" id="image3" name="image3" accept="image/*">
         </div>
     </div>
 
@@ -288,6 +302,11 @@
         </div>
 
         <div class="form-group">
+            <label for="gold_quantity">Quantity:</label>
+            <input type="number" class="form-control" id="gold_quantity" name="gold_quantity" value="{{gold.gold_quantity}}">
+        </div>
+
+        <div class="form-group">
             <label for="gold_description">Description:</label>
             <textarea class="form-control" id="gold_description" name="gold_description">{{ gold.description }}</textarea>
         </div>
@@ -298,21 +317,31 @@
         </div>
 
         <div class="form-group">
+            <label for="diamond_rate_gold">Diamond Rate:</label>
+            <input type="number" class="form-control" id="diamond_rate_gold" name="diamond_rate_gold" value="{{ gold.diamond_rate_in_gold }}">
+        </div>
+
+        <div class="form-group">
+            <label for="other_charges">Other Charges:</label>
+            <input type="number" class="form-control" id="other_charges" name="other_charges" value="{{ gold.other_charges }}">
+        </div>
+
+        <div class="form-group">
             <label for="gold_mrp">MRP:</label>
             <input type="number" class="form-control" id="gold_mrp" name="gold_mrp" value="{{ gold.gold_mrp }}">
         </div>
 
         <div class="form-group">
             <label for="product_picture">Product Picture 1:</label>
-            <input type="file" class="form-control-file" id="product_picture" name="product_picture1" accept="image/*">
+            <input type="file" class="form-control-file" id="image1" name="image1" accept="image/*">
         </div>
         <div class="form-group">
             <label for="product_picture">Product Picture 2:</label>
-            <input type="file" class="form-control-file" id="product_picture" name="product_picture2" accept="image/*">
+            <input type="file" class="form-control-file" id="image2" name="image2" accept="image/*">
         </div>
         <div class="form-group">
             <label for="product_picture">Product Picture 3:</label>
-            <input type="file" class="form-control-file" id="product_picture" name="product_picture3" accept="image/*">
+            <input type="file" class="form-control-file" id="image3" name="image3" accept="image/*">
         </div>
     </div>
 
@@ -364,21 +393,41 @@
         </div>
 
         <div class="form-group">
+            <label for="silver_quantity">Quantity:</label>
+            <input type="number" class="form-control" id="silver_quantity" name="silver_quantity" value="{{ silver.silver_quantity }}">
+        </div>
+
+        <div class="form-group">
+            <label for="diamond_weight_silver">Diamond Weight (grams) in Silver:</label>
+            <input type="text" class="form-control" id="diamond_weight_silver" name="diamond_weight_silver" value="{{ silver.diamond_weight_in_silver }}">
+        </div>
+
+        <div class="form-group">
+            <label for="diamond_rate">Diamond Rate:</label>
+            <input type="number" class="form-control" id="diamond_rate" name="diamond_rate" value="{{ silver.diamond_rate_in_silver }}">
+        </div>
+
+        <div class="form-group">
+            <label for="silver_description">Description:</label>
+            <textarea class="form-control" id="silver_description" name="silver_description">{{silver.description}}</textarea>
+        </div>
+        
+        <div class="form-group">
             <label for="silver_mrp">MRP:</label>
             <input type="number" class="form-control" id="silver_mrp" name="silver_mrp" value="{{ silver.silver_mrp }}">
         </div>
 
         <div class="form-group">
             <label for="product_picture">Product Picture 1:</label>
-            <input type="file" class="form-control-file" id="product_picture" name="product_picture1" accept="image/*">
+            <input type="file" class="form-control-file" id="image1" name="image1" accept="image/*">
         </div>
         <div class="form-group">
             <label for="product_picture">Product Picture 2:</label>
-            <input type="file" class="form-control-file" id="product_picture" name="product_picture2" accept="image/*">
+            <input type="file" class="form-control-file" id="image2" name="image2" accept="image/*">
         </div>
         <div class="form-group">
             <label for="product_picture">Product Picture 3:</label>
-            <input type="file" class="form-control-file" id="product_picture" name="product_picture3" accept="image/*">
+            <input type="file" class="form-control-file" id="image3" name="image3" accept="image/*">
         </div>
     </div>
                 <button type="submit" class="btn-custom">Update Product</button>

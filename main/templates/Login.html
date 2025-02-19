@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f2e9e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            margin: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        p {
+            text-align: center;
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-right: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Input Fields */
+        .coolinput {
+            position: relative;
+        }
+
+        .coolinput input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .coolinput input:focus {
+            border-color: #ff6b6b;
+        }
+
+        label {
+            position: absolute;
+            top: -8px;
+            left: 15px;
+            background-color: #fff;
+            color: #777;
+            padding: 0 5px;
+            font-size: 14px;
+        }
+
+        /* Button Styling */
+        button[type="submit"],
+        .google-button {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover,
+        .google-button:hover {
+            background-color: #ff4d4d;
+        }
+
+        .google-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: #4285F4; /* Google blue */
+        }
+
+        .google-button i {
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            button[type="submit"] {
+                padding: 10px;
+            }
+        }
+    </style>
+
+    <!-- Load the Google Platform Library -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <p>Log in using your credentials or with Google</p>
+        <form id="login-form" method="POST" action="/login/">
+            {% csrf_token %}
+            <div class="coolinput">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter Email" required />
+            </div>
+
+            <div class="coolinput">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter Password" required />
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+</body>
+
+</html>

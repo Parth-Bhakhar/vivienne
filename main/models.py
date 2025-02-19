@@ -4,6 +4,13 @@ from django.db import models
 import os
 from django.utils.timezone import now
 
+class Admin(models.Model):
+        email = models.CharField(max_length=255,unique=True)
+        password = models.CharField(max_length=255)
+
+        def __str__(self):
+            return self.email
+
 
 class Product(models.Model):
     CATEGORY_CHOICES = [
@@ -24,9 +31,9 @@ class Product(models.Model):
 
 
     # Common fields for images
-    product_picture1 = models.ImageField(upload_to='media/', null=True, blank=True)
-    product_picture2 = models.ImageField(upload_to='media/', null=True, blank=True)
-    product_picture3 = models.ImageField(upload_to='media/', null=True, blank=True)
+    product_picture1 = models.ImageField(upload_to='media/')
+    product_picture2 = models.ImageField(upload_to='media/')
+    product_picture3 = models.ImageField(upload_to='media/')
 
     def __str__(self):
         return self.product_name
@@ -40,7 +47,9 @@ class Diamond(models.Model):
     diamond_color = models.CharField(max_length=50)
     diamond_carat = models.FloatField()
     diamond_quantity = models.PositiveIntegerField()
+    description = models.TextField(null=True)
     diamond_mrp = models.DecimalField(max_digits=10, decimal_places=2)
+    tax=models.PositiveIntegerField()
 
     def __str__(self):
         return f"Diamond - {self.product.product_name}"
@@ -53,12 +62,15 @@ class Gold(models.Model):
     weight = models.FloatField()
     carat = models.FloatField(choices=[(91.60, '22K'), (84.00, '20K'), (76.00, '18K'), (58.33, '14K')])
     labour_percentage = models.PositiveIntegerField()
-    description = models.TextField()
+    description = models.TextField(null=True)
     gold_quantity = models.PositiveIntegerField()
     diamond_weight_in_gold = models.FloatField()
+    diamond_rate_in_gold = models.PositiveIntegerField()
     gold_mrp = models.DecimalField(max_digits=10, decimal_places=2)
     bangle_size = models.CharField(max_length=10, null=True, blank=True)
     ring_bracelet_size = models.CharField(max_length=10, null=True, blank=True)
+    other_charges = models.PositiveIntegerField(null=True)
+    tax=models.PositiveIntegerField()
 
     def __str__(self):
         return f"Gold - {self.product.product_name}"
@@ -71,9 +83,12 @@ class Silver(models.Model):
     weight = models.FloatField()
     silver_quantity = models.PositiveIntegerField()
     diamond_weight_in_silver = models.FloatField()
+    diamond_rate_in_silver = models.PositiveIntegerField()
+    description = models.TextField(null=True)
     silver_mrp = models.DecimalField(max_digits=10, decimal_places=2)
     bangle_size = models.CharField(max_length=10, null=True, blank=True)
     ring_bracelet_size = models.CharField(max_length=10, null=True, blank=True)
+    tax=models.PositiveIntegerField()
 
     def __str__(self):
         return f"Silver - {self.product.product_name}"

@@ -183,11 +183,22 @@
 
             <div class="form-group">
                 <label for="diamond_carat">Diamond Carat:</label>
-                <input type="text" class="form-control" id="diamond_carat" name="diamond_carat">
+                <input type="number" class="form-control" id="diamond_carat" name="diamond_carat">
             </div>
-             <div class="form-group">
+            <div class="form-group">
                 <label for="diamond_quantity">Quantity:</label>
                 <input type="number" class="form-control" id="diamond_quantity" name="diamond_quantity">
+            </div>
+            <div class="form-group">
+                <label for="diamond_description">Description:</label>
+                <textarea class="form-control" id="diamond_description" name="diamond_description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="tax">Tax:</label>
+                <select class="form-control" id="tax" name="tax">
+                    <option value="3">3%</option>
+                    <option value="18">18%</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="diamond_mrp">MRP:</label>
@@ -195,15 +206,15 @@
             </div>
             <div class="form-group">
                 <label for="product_picture">Product Picture 1:</label>
-                <input type="file" class="form-control-file" id="product_picture" name="product_picture1" accept="image/*">
+                <input type="file" class="form-control-file" id="image1" name="image1" accept="image/*">
             </div>
             <div class="form-group">
                 <label for="product_picture">Product Picture 2:</label>
-                <input type="file" class="form-control-file" id="product_picture" name="product_picture2" accept="image/*">
+                <input type="file" class="form-control-file" id="image2" name="image2" accept="image/*">  
             </div>
             <div class="form-group">
                 <label for="product_picture">Product Picture 3:</label>
-                <input type="file" class="form-control-file" id="product_picture" name="product_picture3" accept="image/*">
+                <input type="file" class="form-control-file" id="image3" name="image3" accept="image/*">
             </div>
         </div>
 
@@ -295,7 +306,20 @@
                 <label for="diamond_weight">Diamond Weight (grams) in Gold:</label>
                 <input type="text" class="form-control" id="diamond_weight" name="diamond_weight">
             </div>
-
+            <div class="form-group">
+                <label for="diamond_rate_gold">Diamond Rate:</label>
+                <input type="number" class="form-control" id="diamond_rate_gold" name="diamond_rate_gold">
+            </div>
+            <div class="form-group">
+                <label for="other_charges">Other Charges:</label>
+                <input type="number" class="form-control" id="other_charges" name="other_charges">
+            </div>
+            <div class="form-group">
+                <label for="tax">Tax:</label>
+                <select class="form-control" id="tax" name="tax">
+                    <option value="3" selected>3%</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="gold_mrp">MRP:</label>
                 <input type="number" class="form-control" id="gold_mrp" name="gold_mrp">
@@ -303,15 +327,15 @@
         
             <div class="form-group">
                 <label for="product_picture">Product Picture 1:</label>
-                <input type="file" class="form-control-file" id="product_picture" name="product_picture1" accept="image/*">
+                <input type="file" class="form-control-file" id="image1" name="image1" accept="image/*">
             </div>
             <div class="form-group">
                 <label for="product_picture">Product Picture 2:</label>
-                <input type="file" class="form-control-file" id="product_picture" name="product_picture2" accept="image/*">
+                <input type="file" class="form-control-file" id="image2" name="image2" accept="image/*">
             </div>
             <div class="form-group">
                 <label for="product_picture">Product Picture 3:</label>
-                <input type="file" class="form-control-file" id="product_picture" name="product_picture3" accept="image/*">
+                <input type="file" class="form-control-file" id="image3" name="image3" accept="image/*">
             </div>
         </div>
         
@@ -354,14 +378,14 @@
             <!-- Size Input for Rings and Bracelets -->
             <div id="silver_ring_bracelet_size" class="form-group" style="display:none;">
                 <label for="silver_ring_bracelet_size_input">Size:</label>
-                <input type="text" class="form-control" id="silver_ring_bracelet_size_input" name="silver_ring_bracelet_size" placeholder="Enter Size (e.g., 6, 7)">
+                <input type="number" class="form-control" id="silver_ring_bracelet_size_input" name="silver_ring_bracelet_size" placeholder="Enter Size (e.g., 6, 7)">
             </div>
         
             <div class="form-group">
                 <label for="silver_weight">Weight (grams):</label>
                 <input type="text" class="form-control" id="silver_weight" name="silver_weight">
             </div>
-             <div class="form-group">
+            <div class="form-group">
                 <label for="silver_quantity">Quantity:</label>
                 <input type="number" class="form-control" id="silver_quantity" name="silver_quantity">
             </div>
@@ -369,7 +393,20 @@
                 <label for="diamond_weight_silver">Diamond Weight (grams) in Silver:</label>
                 <input type="text" class="form-control" id="diamond_weight_silver" name="diamond_weight_silver">
             </div>
-
+            <div class="form-group">
+                <label for="diamond_rate">Diamond Rate:</label>
+                <input type="number" class="form-control" id="diamond_rate" name="diamond_rate">
+            </div>
+            <div class="form-group">
+                <label for="silver_description">Description:</label>
+                <textarea class="form-control" id="silver_description" name="silver_description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="tax">Tax:</label>
+                <select class="form-control" id="tax" name="tax">
+                    <option value="3" selected>3%</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="silver_mrp">MRP:</label>
                 <input type="number" class="form-control" id="silver_mrp" name="silver_mrp">
@@ -377,15 +414,15 @@
         
             <div class="form-group">
                 <label for="product_picture">Product Picture 1:</label>
-                <input type="file" class="form-control-file" id="product_picture" name="product_picture1" accept="image/*">
+                <input type="file" class="form-control-file" id="image1" name="image1" accept="image/*">
             </div>
             <div class="form-group">
                 <label for="product_picture">Product Picture 2:</label>
-                <input type="file" class="form-control-file" id="product_picture" name="product_picture2" accept="image/*">
+                <input type="file" class="form-control-file" id="image2" name="image2" accept="image/*">
             </div>
             <div class="form-group">
                 <label for="product_picture">Product Picture 3:</label>
-                <input type="file" class="form-control-file" id="product_picture" name="product_picture3" accept="image/*">
+                <input type="file" class="form-control-file" id="image3" name="image3" accept="image/*">
             </div>
         </div>
         <button type="submit" class="btn-custom">Add Product</button>

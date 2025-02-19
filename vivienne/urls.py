@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from main.views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', admin),
+    path('',login),
+    path('login/',login),
     path('admin/', admin),
     path('add_product/', add_product, name='add_product'),
     path('delete_product/', delete_product, name='delete_product'),
@@ -28,6 +31,10 @@ urlpatterns = [
     path('update_rates/', update_rates, name='update_rates'),
     path('toggle-status/<int:product_id>/', toggle_product_status, name='toggle_product_status'),
     path('save_updated_data/', save_updated_data, name='save_updated_data'),
-    path('view_products/', view_products, name='view_products'),
     path('error/', error, name='error'),
+    path('logout/',logout)
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
